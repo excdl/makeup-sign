@@ -23,9 +23,9 @@ th, td { padding:8px; border-bottom:1px solid #ddd; text-align:center; }
 th { background:#1976d2; color:#fff; position:sticky; top:0; }
 tr:hover { background:#f1f1f1; cursor:pointer; }
 .badge { display:inline-block; padding:4px 12px; border-radius:12px; font-weight:bold; cursor:pointer; }
-.badge-未簽核 { background:#fff; color:#d32f2f; } /* 紅色文字 */
-.badge-簽核中 { background:#f57c00; color:#fff; }   /* 橘色 */
-.badge-已簽核 { background:#388e3c; color:#fff; }   /* 綠色 */
+.badge-未簽核 { background:#fff; color:#d32f2f; }
+.badge-簽核中 { background:#f57c00; color:#fff; }
+.badge-已簽核 { background:#388e3c; color:#fff; }
 #overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:999; }
 #modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border-radius:12px; width:90%; max-width:400px; font-size:1em; z-index:1000; box-shadow:0 4px 20px rgba(0,0,0,0.3);}
 #modal h3 { margin-top:0; font-size:1.4em; }
@@ -39,6 +39,7 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
 </style>
 </head>
 <body>
+
 <div class="card" id="loginBox">
   <h2>補打卡簽核系統</h2>
   <input id="loginCode" type="text" autocomplete="off" placeholder="請輸入代碼" style="font-family: 'text-security-disc'; -webkit-text-security: disc;">
@@ -89,7 +90,7 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
 </div>
 
 <script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx8uSU6c6zgtDYNPXWDr4Ehy3RqU7Ezz0Q02siBAEO7bAxpG_LN21rw9UcXt7XskW-M/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw3qpQc0Earak8Ew1T3NInJOkcWLSzdxyAJ94Nf07Sr6UNP4z1fwNppW0qFsrDcoaoR/exec';
 let loginCode='', userRole='', approverName='', statusFilter='未簽核';
 let currentKey=null, currentLevel=null;
 
