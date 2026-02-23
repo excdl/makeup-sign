@@ -24,8 +24,8 @@ th { background:#1976d2; color:#fff; position:sticky; top:0; }
 tr:hover { background:#f1f1f1; cursor:pointer; }
 .badge { display:inline-block; padding:4px 12px; border-radius:12px; color:#fff; font-weight:bold; cursor:pointer; }
 .badge-未簽核 { background:#d32f2f; }
-.badge-簽核中 { background:#f57c00; }  /* 橘色 */
-.badge-已簽核 { background:#388e3c; }  /* 綠色 */
+.badge-簽核中 { background:#f57c00; }
+.badge-已簽核 { background:#388e3c; }
 #overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:999; }
 #modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border-radius:12px; width:90%; max-width:400px; font-size:1em; z-index:1000; box-shadow:0 4px 20px rgba(0,0,0,0.3);}
 #modal h3 { margin-top:0; font-size:1.4em; }
@@ -39,7 +39,6 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
 </style>
 </head>
 <body>
-
 <div class="card" id="loginBox">
   <h2>補打卡簽核系統</h2>
   <input id="loginCode" type="text" autocomplete="off" placeholder="請輸入代碼" style="font-family: 'text-security-disc'; -webkit-text-security: disc;">
@@ -51,14 +50,12 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
     補打卡簽核系統
     <button class="logoutBtn" onclick="logout()">登出</button>
   </h2>
-
   <div class="filters">
     <button id="btnAll" onclick="setStatus('ALL')">全部</button>
     <button id="btnPending" onclick="setStatus('未簽核')">未簽核</button>
     <button id="btnProcessing" onclick="setStatus('簽核中')">簽核中</button>
     <button id="btnDone" onclick="setStatus('已簽核')">已簽核</button>
   </div>
-
   <table>
     <thead>
       <tr>
@@ -89,7 +86,7 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
 </div>
 
 <script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyNhmLdVvhTWqLAgAZaHg446-7gW-DulV1Zq0GMk0ixAZHNP-2K0TY59uduO60TXu2R/exec'; // 改成你的 Web App URL
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw7MLboIyyC917A4rCt1-i35yVDIeu1w6YnANIaCTm7Vh8GakfU6kE8A0tm-PVK5AcV/exec';
 let loginCode='', userRole='', approverName='', statusFilter='未簽核';
 let currentKey=null, currentLevel=null;
 
@@ -109,10 +106,7 @@ async function login(){
   setStatus('未簽核');
 }
 
-function logout(){
-  loginCode=''; userRole=''; approverName=''; statusFilter='未簽核';
-  window.location.reload();
-}
+function logout(){ loginCode=''; userRole=''; approverName=''; statusFilter='未簽核'; window.location.reload(); }
 
 function setStatus(s){
   statusFilter=s;
@@ -136,18 +130,11 @@ async function loadData(){
 }
 
 function loadListOnly(list){
-  const tbody = document.getElementById('tbody');
-  tbody.innerHTML='';
-  list.filter(r=>statusFilter==='ALL'||r.status===statusFilter).forEach(r=>{
+  const tbody = document.getElementById('tbody'); tbody.innerHTML='';
+  list.forEach(r=>{
     const tr = document.createElement('tr');
     const badge = `<span class="badge ${r.colorClass}" onclick="setStatus('${r.status}')">${r.status}</span>`;
-    tr.innerHTML=`
-      <td>${r.applyDate}</td>
-      <td>${r.userName}</td>
-      <td>${r.leaveType}</td>
-      <td>${r.startTime}</td>
-      <td>${badge}</td>
-    `;
+    tr.innerHTML=`<td>${r.applyDate}</td><td>${r.userName}</td><td>${r.leaveType}</td><td>${r.startTime}</td><td>${badge}</td>`;
     if((userRole==='督導' && !r.approval1) || (userRole==='總督導' && r.approval1 && !r.approval2)){
       tr.style.cursor='pointer';
       tr.onclick=()=>openModal(r);
@@ -167,9 +154,7 @@ function openModal(r){
   overlay.style.display=modal.style.display='block';
 }
 
-function closeModal(){
-  overlay.style.display=modal.style.display='none';
-}
+function closeModal(){ overlay.style.display=modal.style.display='none'; }
 
 async function submit(ok){
   const params = new URLSearchParams();
@@ -178,13 +163,11 @@ async function submit(ok){
   params.append('level',currentLevel);
   params.append('approver',approverName);
   params.append('status',ok?'核准':'不准');
-
   const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r=>r.json());
   alert(res.message || '簽核完成');
   closeModal();
   loadData();
 }
 </script>
-
 </body>
 </html>
