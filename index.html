@@ -60,14 +60,14 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
   <table>
     <thead>
       <tr>
-        <th>日期</th>
         <th>姓名</th>
+        <th>日期</th>
         <th>時間</th>
-        <th>狀態</th>
         <th>公司位置</th>
         <th>打卡狀態</th>
         <th>補打卡</th>
         <th>補打原因</th>
+        <th>狀態</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -113,7 +113,6 @@ async function login(){
 }
 
 function logout(){
-  loginCode=''; userRole=''; approverName=''; statusFilter='未簽核';
   window.location.reload();
 }
 
@@ -124,8 +123,6 @@ function setStatus(s){
   if(s==='未簽核') btnPending.classList.add('active');
   if(s==='簽核中') btnProcessing.classList.add('active');
   if(s==='已簽核') btnDone.classList.add('active');
-  const btn = document.querySelector(`.filters button.active`);
-  btn.scrollIntoView({behavior:'smooth', inline:'center'});
   loadData();
 }
 
@@ -139,20 +136,21 @@ async function loadData(){
 }
 
 function loadListOnly(list){
-  const tbody = document.getElementById('tbody'); tbody.innerHTML='';
+  const tbody = document.getElementById('tbody'); 
+  tbody.innerHTML='';
   list.forEach(r=>{
     if(statusFilter!=='ALL' && r.status!==statusFilter) return;
     const tr = document.createElement('tr');
     const badge = `<span class="badge ${r.colorClass}">${r.status}</span>`;
     tr.innerHTML=`
-      <td>${r.date}</td>
       <td>${r.userName}</td>
+      <td>${r.date}</td>
       <td>${r.time}</td>
-      <td>${badge}</td>
       <td>${r.company}</td>
       <td>${r.punchStatus}</td>
       <td>${r.補打卡||''}</td>
       <td>${r.reason||''}</td>
+      <td>${badge}</td>
     `;
     if((userRole==='督導' && r.status==='未簽核') || (userRole==='總督導' && r.status==='簽核中')){
       tr.style.cursor='pointer';
@@ -170,11 +168,13 @@ function openModal(r){
   document.getElementById('modalStart').textContent=r.date;
   document.getElementById('modalEnd').textContent=r.time;
   document.getElementById('modalReason').textContent=r.reason||'';
-  document.getElementById('overlay').style.display=document.getElementById('modal').style.display='block';
+  document.getElementById('overlay').style.display='block';
+  document.getElementById('modal').style.display='block';
 }
 
 function closeModal(){
-  document.getElementById('overlay').style.display=document.getElementById('modal').style.display='none';
+  document.getElementById('overlay').style.display='none';
+  document.getElementById('modal').style.display='none';
 }
 
 async function submit(ok){
@@ -186,7 +186,8 @@ async function submit(ok){
   params.append('status',ok?'核准':'不准');
   const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r=>r.json());
   alert(res.message || '簽核完成');
-  closeModal(); loadData();
+  closeModal(); 
+  loadData();
 }
 </script>
 </body>
