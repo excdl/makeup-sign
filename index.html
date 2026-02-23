@@ -22,12 +22,6 @@ table { width:100%; border-collapse:collapse; margin-top:10px; font-size:1.2em; 
 th, td { padding:8px; border-bottom:1px solid #ddd; text-align:center; }
 th { background:#1976d2; color:#fff; position:sticky; top:0; }
 tr:hover { background:#f1f1f1; cursor:pointer; }
-td.nameCell { 
-  white-space: nowrap; 
-  overflow-x: auto; 
-  display: block; 
-  max-width: 200px; 
-}
 .badge { display:inline-block; padding:4px 12px; border-radius:12px; font-weight:bold; cursor:pointer; }
 .badge-未簽核 { background:#fff; color:#d32f2f; }
 .badge-簽核中 { background:#f57c00; color:#fff; }
@@ -66,8 +60,8 @@ td.nameCell {
   <table>
     <thead>
       <tr>
-        <th>姓名</th>
         <th>日期</th>
+        <th>姓名</th>
         <th>時間</th>
         <th>狀態</th>
         <th>公司位置</th>
@@ -96,7 +90,7 @@ td.nameCell {
 </div>
 
 <script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwjvpPFcZEJBXfVdjExHoNypfdD1RorK-aDZ5Ioo6FvpNjtgxQ1QLICGRmFTbCZC3lj/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw3qpQc0Earak8Ew1T3NInJOkcWLSzdxyAJ94Nf07Sr6UNP4z1fwNppW0qFsrDcoaoR/exec';
 let loginCode='', userRole='', approverName='', statusFilter='未簽核';
 let currentKey=null, currentLevel=null;
 
@@ -130,6 +124,8 @@ function setStatus(s){
   if(s==='未簽核') btnPending.classList.add('active');
   if(s==='簽核中') btnProcessing.classList.add('active');
   if(s==='已簽核') btnDone.classList.add('active');
+  const btn = document.querySelector(`.filters button.active`);
+  btn.scrollIntoView({behavior:'smooth', inline:'center'});
   loadData();
 }
 
@@ -149,8 +145,8 @@ function loadListOnly(list){
     const tr = document.createElement('tr');
     const badge = `<span class="badge ${r.colorClass}">${r.status}</span>`;
     tr.innerHTML=`
-      <td class="nameCell">${r.userName}</td>
       <td>${r.date}</td>
+      <td>${r.userName}</td>
       <td>${r.time}</td>
       <td>${badge}</td>
       <td>${r.company}</td>
