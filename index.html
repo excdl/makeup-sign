@@ -22,10 +22,10 @@ table { width:100%; border-collapse:collapse; margin-top:10px; font-size:1.2em; 
 th, td { padding:8px; border-bottom:1px solid #ddd; text-align:center; }
 th { background:#1976d2; color:#fff; position:sticky; top:0; }
 tr:hover { background:#f1f1f1; cursor:pointer; }
-.badge { display:inline-block; padding:4px 12px; border-radius:12px; color:#fff; font-weight:bold; cursor:pointer; }
-.badge-未簽核 { background:#d32f2f; }
-.badge-簽核中 { background:#f57c00; }
-.badge-已簽核 { background:#388e3c; }
+.badge { display:inline-block; padding:4px 12px; border-radius:12px; font-weight:bold; cursor:pointer; }
+.badge-未簽核 { background:#fff; color:#d32f2f; } /* 紅色文字 */
+.badge-簽核中 { background:#f57c00; color:#fff; }
+.badge-已簽核 { background:#388e3c; color:#fff; }
 #overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:999; }
 #modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border-radius:12px; width:90%; max-width:400px; font-size:1em; z-index:1000; box-shadow:0 4px 20px rgba(0,0,0,0.3);}
 #modal h3 { margin-top:0; font-size:1.4em; }
@@ -61,9 +61,12 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
       <tr>
         <th>日期</th>
         <th>姓名</th>
-        <th>打卡類型</th>
         <th>時間</th>
         <th>狀態</th>
+        <th>公司位置</th>
+        <th>打卡狀態</th>
+        <th>補打卡</th>
+        <th>補打原因</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -86,7 +89,7 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
 </div>
 
 <script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw7MLboIyyC917A4rCt1-i35yVDIeu1w6YnANIaCTm7Vh8GakfU6kE8A0tm-PVK5AcV/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby4Ma9BBL98MeHeX6SLqxqk3uAyr3ofkWBWlEAxD4hkJhpSUr18J4ZAL2UlkHJq-UWz/exec';
 let loginCode='', userRole='', approverName='', statusFilter='未簽核';
 let currentKey=null, currentLevel=null;
 
@@ -133,9 +136,18 @@ function loadListOnly(list){
   const tbody = document.getElementById('tbody'); tbody.innerHTML='';
   list.forEach(r=>{
     const tr = document.createElement('tr');
-    const badge = `<span class="badge ${r.colorClass}" onclick="setStatus('${r.status}')">${r.status}</span>`;
-    tr.innerHTML=`<td>${r.applyDate}</td><td>${r.userName}</td><td>${r.leaveType}</td><td>${r.startTime}</td><td>${badge}</td>`;
-    if((userRole==='督導' && !r.approval1) || (userRole==='總督導' && r.approval1 && !r.approval2)){
+    const badge = `<span class="badge ${r.colorClass}">${r.status}</span>`;
+    tr.innerHTML=`
+      <td>${r.date}</td>
+      <td>${r.userName}</td>
+      <td>${r.time}</td>
+      <td>${badge}</td>
+      <td>${r.company}</td>
+      <td>${r.punchStatus}</td>
+      <td>${r.補打卡}</td>
+      <td>${r.reason}</td>
+    `;
+    if((userRole==='督導' && r.status==='未簽核') || (userRole==='總督導' && r.status==='簽核中')){
       tr.style.cursor='pointer';
       tr.onclick=()=>openModal(r);
     }
@@ -145,11 +157,11 @@ function loadListOnly(list){
 
 function openModal(r){
   currentKey=r.keyId;
-  currentLevel=(r.approval1 && userRole==='總督導')?2:1;
+  currentLevel=(r.status==='簽核中' && userRole==='總督導')?2:1;
   modalName.textContent=r.userName;
-  modalType.textContent=r.leaveType;
-  modalStart.textContent=r.startDate;
-  modalEnd.textContent=r.startTime;
+  modalType.textContent=r.補打卡;
+  modalStart.textContent=r.date;
+  modalEnd.textContent=r.time;
   modalReason.textContent=r.reason||'';
   overlay.style.display=modal.style.display='block';
 }
@@ -165,8 +177,7 @@ async function submit(ok){
   params.append('status',ok?'核准':'不准');
   const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r=>r.json());
   alert(res.message || '簽核完成');
-  closeModal();
-  loadData();
+  closeModal(); loadData();
 }
 </script>
 </body>
