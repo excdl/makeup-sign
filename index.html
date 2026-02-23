@@ -24,8 +24,8 @@ th { background:#1976d2; color:#fff; position:sticky; top:0; }
 tr:hover { background:#f1f1f1; cursor:pointer; }
 .badge { display:inline-block; padding:4px 12px; border-radius:12px; font-weight:bold; cursor:pointer; }
 .badge-未簽核 { background:#fff; color:#d32f2f; } /* 紅色文字 */
-.badge-簽核中 { background:#f57c00; color:#fff; }
-.badge-已簽核 { background:#388e3c; color:#fff; }
+.badge-簽核中 { background:#f57c00; color:#fff; }   /* 橘色 */
+.badge-已簽核 { background:#388e3c; color:#fff; }   /* 綠色 */
 #overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:999; }
 #modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border-radius:12px; width:90%; max-width:400px; font-size:1em; z-index:1000; box-shadow:0 4px 20px rgba(0,0,0,0.3);}
 #modal h3 { margin-top:0; font-size:1.4em; }
@@ -78,7 +78,7 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
   <button class="closeBtn" onclick="closeModal()">×</button>
   <h3>簽核</h3>
   <div>姓名：<span id="modalName"></span></div>
-  <div>打卡類型：<span id="modalType"></span></div>
+  <div>補打卡：<span id="modalType"></span></div>
   <div>日期：<span id="modalStart"></span></div>
   <div>時間：<span id="modalEnd"></span></div>
   <div>補打原因：<span id="modalReason"></span></div>
@@ -89,10 +89,12 @@ tr:hover { background:#f1f1f1; cursor:pointer; }
 </div>
 
 <script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzzyiFRZDA88NZwdWiEqgJTxOmQgau1-UXdGBYVGTaiAQXsjBopjC5tvtOB5Qpqcu6D/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzDK91dpX6jwFOf9IS8au33JVms_3k1QOoeM9WJruFV1u6dRQNwLH9Nsl96FIDamgSy/exec';
 let loginCode='', userRole='', approverName='', statusFilter='未簽核';
 let currentKey=null, currentLevel=null;
 
+const loginBox = document.getElementById('loginBox');
+const mainCard = document.getElementById('mainCard');
 loginBox.style.display='block';
 mainCard.style.display='none';
 
@@ -109,16 +111,19 @@ async function login(){
   setStatus('未簽核');
 }
 
-function logout(){ loginCode=''; userRole=''; approverName=''; statusFilter='未簽核'; window.location.reload(); }
+function logout(){
+  loginCode=''; userRole=''; approverName=''; statusFilter='未簽核';
+  window.location.reload();
+}
 
 function setStatus(s){
-  statusFilter=s;
+  statusFilter = s;
   document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
   if(s==='ALL') btnAll.classList.add('active');
   if(s==='未簽核') btnPending.classList.add('active');
   if(s==='簽核中') btnProcessing.classList.add('active');
   if(s==='已簽核') btnDone.classList.add('active');
-  const btn=document.querySelector(`.filters button.active`);
+  const btn = document.querySelector(`.filters button.active`);
   btn.scrollIntoView({behavior:'smooth', inline:'center'});
   loadData();
 }
@@ -135,6 +140,7 @@ async function loadData(){
 function loadListOnly(list){
   const tbody = document.getElementById('tbody'); tbody.innerHTML='';
   list.forEach(r=>{
+    if(statusFilter!=='ALL' && r.status!==statusFilter) return;
     const tr = document.createElement('tr');
     const badge = `<span class="badge ${r.colorClass}">${r.status}</span>`;
     tr.innerHTML=`
@@ -144,8 +150,8 @@ function loadListOnly(list){
       <td>${badge}</td>
       <td>${r.company}</td>
       <td>${r.punchStatus}</td>
-      <td>${r.補打卡}</td>
-      <td>${r.reason}</td>
+      <td>${r.補打卡||''}</td>
+      <td>${r.reason||''}</td>
     `;
     if((userRole==='督導' && r.status==='未簽核') || (userRole==='總督導' && r.status==='簽核中')){
       tr.style.cursor='pointer';
@@ -158,15 +164,17 @@ function loadListOnly(list){
 function openModal(r){
   currentKey=r.keyId;
   currentLevel=(r.status==='簽核中' && userRole==='總督導')?2:1;
-  modalName.textContent=r.userName;
-  modalType.textContent=r.補打卡;
-  modalStart.textContent=r.date;
-  modalEnd.textContent=r.time;
-  modalReason.textContent=r.reason||'';
-  overlay.style.display=modal.style.display='block';
+  document.getElementById('modalName').textContent=r.userName;
+  document.getElementById('modalType').textContent=r.補打卡;
+  document.getElementById('modalStart').textContent=r.date;
+  document.getElementById('modalEnd').textContent=r.time;
+  document.getElementById('modalReason').textContent=r.reason||'';
+  document.getElementById('overlay').style.display=document.getElementById('modal').style.display='block';
 }
 
-function closeModal(){ overlay.style.display=modal.style.display='none'; }
+function closeModal(){
+  document.getElementById('overlay').style.display=document.getElementById('modal').style.display='none';
+}
 
 async function submit(ok){
   const params = new URLSearchParams();
