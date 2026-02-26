@@ -113,7 +113,16 @@ async function login(){
 }
 
 function logout(){
-  window.location.reload();
+  // 清空登入資訊（可留或不留，反正會離開頁面）
+  loginCode = '';
+  userRole = '';
+  approverName = '';
+  statusFilter = '未簽核';
+
+  // 直接導向指定網頁（不回登入頁）
+  window.location.replace(
+    'https://script.google.com/macros/s/AKfycbz1FavWzmy5sl8iFCRfp7ZHQ_3EdFhTw_M093XAtq8ISIn9jiWrujfgZjjqRZxorTdkLQ/exec'
+  );
 }
 
 function setStatus(s){
