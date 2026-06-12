@@ -7,28 +7,36 @@
 
 <style>
 body{
-  font-family:Arial;
   margin:0;
+  font-family:Arial;
   background:#f4f6f8;
 }
 
 /* LOGIN */
 #loginBox{
-  display:flex;
-  flex-direction:column;
-  max-width:380px;
-  margin:90px auto;
+  max-width:360px;
+  margin:100px auto;
   background:#fff;
   padding:28px;
   border-radius:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,.12);
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+  display:flex;
+  flex-direction:column;
 }
-#loginBox h2{ text-align:center; margin-bottom:20px;}
+#loginBox h2{text-align:center;}
+
 #loginBox input{
   padding:12px;
+  margin-top:10px;
   border:1px solid #ddd;
   border-radius:8px;
+
+  /* 🔐 密碼模式 */
+  -webkit-text-security: disc;
+  font-size:16px;
+  letter-spacing:2px;
 }
+
 #loginBox button{
   margin-top:12px;
   padding:12px;
@@ -36,34 +44,32 @@ body{
   border-radius:8px;
   background:#1976d2;
   color:#fff;
+  cursor:pointer;
 }
 
-/* HEADER (104風格) */
+/* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:14px 18px;
   background:#fff;
+  padding:14px 16px;
   box-shadow:0 2px 10px rgba(0,0,0,.08);
 }
 
 .title{
-  font-size:18px;
   font-weight:700;
 }
 
-/* ❌ EXIT BUTTON */
-.closeExit{
+.exitBtn{
   width:34px;
   height:34px;
   border-radius:50%;
   border:none;
   background:#eee;
-  font-size:18px;
   cursor:pointer;
 }
-.closeExit:hover{
+.exitBtn:hover{
   background:#ff4d4f;
   color:#fff;
 }
@@ -72,31 +78,33 @@ body{
 .filters{
   display:flex;
   gap:8px;
-  padding:12px 16px;
+  padding:10px 14px;
   overflow-x:auto;
 }
+
 .filters button{
   border:none;
   padding:8px 14px;
   border-radius:20px;
   background:#e9ecef;
   cursor:pointer;
-  white-space:nowrap;
 }
+
 .filters button.active{
   background:#1976d2;
   color:#fff;
 }
 
-/* CARD LIST (取代 table → 104感) */
+/* CARD */
 .list{
   padding:10px 14px;
 }
+
 .card{
   background:#fff;
-  margin-bottom:10px;
-  border-radius:10px;
   padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
   box-shadow:0 1px 6px rgba(0,0,0,.06);
   cursor:pointer;
   transition:.2s;
@@ -104,38 +112,96 @@ body{
 .card:hover{
   transform:translateY(-2px);
 }
-.row{
-  display:flex;
-  justify-content:space-between;
-  margin:4px 0;
-}
+
 .badge{
   padding:4px 10px;
   border-radius:12px;
   font-size:12px;
 }
-.未簽核{background:#fff0f0;color:#d32f2f;}
+.未簽核{background:#ffecec;color:#d32f2f;}
 .簽核中{background:#fff7e6;color:#ff8c00;}
-.已簽核{background:#e6f4ea;color:#2e7d32;}
+.已簽核{background:#e8f5e9;color:#2e7d32;}
 
 /* MODAL */
 #overlay{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.35);
+  background:rgba(0,0,0,.4);
 }
+
 #modal{
   display:none;
   position:fixed;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
+  width:92%;
+  max-width:520px;
   background:#fff;
+  border-radius:14px;
   padding:16px;
-  width:90%;
-  max-width:420px;
-  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.closeBtn{
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  background:#eee;
+}
+.closeBtn:hover{background:#ff4d4f;color:#fff;}
+
+/* timeline */
+.timeline{
+  margin:10px 0;
+  padding-left:10px;
+  border-left:3px solid #eee;
+}
+.step{
+  margin:6px 0;
+  font-size:13px;
+  color:#999;
+}
+.step.done{color:#2e7d32;font-weight:600;}
+.step.active{color:#1976d2;font-weight:700;}
+
+/* textarea */
+textarea{
+  width:100%;
+  min-height:70px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  padding:10px;
+  resize:none;
+}
+
+/* buttons */
+.actionBtns{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
+
+.approveBtn,.rejectBtn{
+  flex:1;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  color:#fff;
+  cursor:pointer;
+}
+
+.approveBtn{background:#2e7d32;}
+.rejectBtn{background:#d32f2f;}
+
+button:disabled{
+  opacity:.6;
 }
 </style>
 </head>
@@ -144,8 +210,8 @@ body{
 
 <!-- LOGIN -->
 <div id="loginBox">
-  <h2>補打卡簽核系統</h2>
-  <input id="loginCode" placeholder="請輸入代碼">
+  <h2>簽核系統登入</h2>
+  <input id="code" placeholder="請輸入代碼">
   <button onclick="login()">登入</button>
 </div>
 
@@ -154,14 +220,14 @@ body{
 
   <div class="header">
     <div class="title">補打卡簽核系統</div>
-    <button class="closeExit" onclick="logout()">×</button>
+    <button class="exitBtn" onclick="logout()">×</button>
   </div>
 
   <div class="filters">
-    <button onclick="setStatus('ALL')" id="bAll">全部</button>
-    <button onclick="setStatus('未簽核')" id="b1">未簽核</button>
-    <button onclick="setStatus('簽核中')" id="b2">簽核中</button>
-    <button onclick="setStatus('已簽核')" id="b3">已簽核</button>
+    <button onclick="setFilter('ALL')">全部</button>
+    <button onclick="setFilter('未簽核')">未簽核</button>
+    <button onclick="setFilter('簽核中')">簽核中</button>
+    <button onclick="setFilter('已簽核')">已簽核</button>
   </div>
 
   <div class="list" id="list"></div>
@@ -171,29 +237,46 @@ body{
 <div id="overlay" onclick="closeModal()"></div>
 
 <div id="modal">
-  <h3>簽核</h3>
-  <div id="mContent"></div>
-  <button onclick="closeModal()">關閉</button>
+  <button class="closeBtn" onclick="closeModal()">×</button>
+
+  <h3>簽核作業</h3>
+
+  <div id="info"></div>
+
+  <div class="timeline">
+    <div class="step done">✔ 申請送出</div>
+    <div class="step active">⏳ 主管簽核</div>
+    <div class="step">⏳ 總督導</div>
+  </div>
+
+  <textarea id="comment" placeholder="請輸入簽核意見"></textarea>
+
+  <div class="actionBtns">
+    <button id="okBtn" class="approveBtn" onclick="submit(true)">✔ 核准</button>
+    <button id="noBtn" class="rejectBtn" onclick="submit(false)">✖ 退回</button>
+  </div>
 </div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbxxFjQj7wFbAcG55GXNTdIWZ0xrQtMfKXSvW0bE7ujgTGO41mhd3gwfImDKoi5rIDdh/exec";
+const API="https://script.google.com/macros/s/AKfycbxxFjQj7wFbAcG55GXNTdIWZ0xrQtMfKXSvW0bE7ujgTGO41mhd3gwfImDKoi5rIDdh/exec";
 
-let code='', role='', name='';
-let cacheList=[];
-let filter='未簽核';
+let code="", role="", name="";
+let listCache=[];
+let filter="未簽核";
+let currentKey="";
 
 async function login(){
-  const v=document.getElementById('loginCode').value;
+  const v=document.getElementById("code").value;
+
   const r=await fetch(`${API}?action=checkLogin&code=${v}`).then(r=>r.json());
-  if(!r) return alert('錯誤');
+  if(!r) return alert("登入失敗");
 
   code=v;
   role=r.role;
   name=r.approverName;
 
-  document.getElementById('loginBox').style.display='none';
-  document.getElementById('main').style.display='block';
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("main").style.display="block";
 
   load();
 }
@@ -202,56 +285,90 @@ function logout(){
   location.replace("https://script.google.com/macros/s/AKfycbxBaH8FGsqhonffJgszR2SYFUz0XpZZVzDQeEdHr_xVMQpj3NvAP1rT4ar3T5kMpmlpIA/exec");
 }
 
-function setStatus(s){
-  filter=s;
-  document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  render();
+function setFilter(f){
+  filter=f;
+  load();
 }
 
-/* 🚀 只抓一次 */
 async function load(){
   const r=await fetch(`${API}?action=getLeaveData&code=${code}`).then(r=>r.json());
-  cacheList=r.list;
+  listCache=r.list;
   render();
 }
 
-/* 🚀 前端過濾 + DOM減少 */
 function render(){
-  const box=document.getElementById('list');
-  box.innerHTML='';
-  const frag=document.createDocumentFragment();
+  const box=document.getElementById("list");
+  box.innerHTML="";
 
-  cacheList
-    .filter(x=>filter==='ALL'||x.status===filter)
+  listCache
+    .filter(x=>filter==="ALL"||x.status===filter)
     .forEach(r=>{
-      const div=document.createElement('div');
-      div.className='card';
-      div.onclick=()=>open(r);
+      const d=document.createElement("div");
+      d.className="card";
+      d.onclick=()=>open(r);
 
-      div.innerHTML=`
-        <div class="row"><b>${r.userName}</b><span class="badge ${r.status}">${r.status}</span></div>
-        <div class="row">${r.date} ${r.time}</div>
-        <div class="row">${r.reason||''}</div>
+      d.innerHTML=`
+        <div><b>${r.userName}</b>
+        <span class="badge ${r.status}">${r.status}</span></div>
+        <div>${r.date} ${r.time}</div>
+        <div>${r.reason||""}</div>
       `;
-      frag.appendChild(div);
+      box.appendChild(d);
     });
-
-  box.appendChild(frag);
 }
 
 function open(r){
-  document.getElementById('mContent').innerHTML=`
-    <p>姓名：${r.userName}</p>
-    <p>原因：${r.reason||''}</p>
+  currentKey=r.keyId;
+
+  document.getElementById("info").innerHTML=`
+    <div>姓名：${r.userName}</div>
+    <div>日期：${r.date}</div>
+    <div>時間：${r.time}</div>
+    <div>原因：${r.reason||""}</div>
   `;
-  document.getElementById('overlay').style.display='block';
-  document.getElementById('modal').style.display='block';
+
+  document.getElementById("comment").value="";
+
+  document.getElementById("overlay").style.display="block";
+  document.getElementById("modal").style.display="block";
 }
 
 function closeModal(){
-  document.getElementById('overlay').style.display='none';
-  document.getElementById('modal').style.display='none';
+  document.getElementById("overlay").style.display="none";
+  document.getElementById("modal").style.display="none";
+}
+
+async function submit(ok){
+
+  const comment=document.getElementById("comment").value.trim();
+  if(!comment) return alert("請輸入意見");
+
+  if(!confirm(ok?"確認核准？":"確認退回？")) return;
+
+  const okBtn=document.getElementById("okBtn");
+  const noBtn=document.getElementById("noBtn");
+
+  okBtn.disabled=true;
+  noBtn.disabled=true;
+
+  try{
+    const p=new URLSearchParams();
+    p.append("action","updateLeaveApproval");
+    p.append("keyId",currentKey);
+    p.append("approver",name);
+    p.append("status",ok?"核准":"不准");
+    p.append("comment",comment);
+
+    const res=await fetch(`${API}?${p}`).then(r=>r.json());
+    alert(res.message||"完成");
+
+    closeModal();
+    load();
+
+  }finally{
+    okBtn.disabled=false;
+    noBtn.disabled=false;
+  }
 }
 </script>
 
