@@ -7,31 +7,33 @@
 
 <style>
 body{
-  margin:0;
   font-family:Arial;
+  margin:0;
   background:#f4f6f8;
 }
 
 /* LOGIN */
 #loginBox{
-  max-width:360px;
-  margin:100px auto;
+  display:flex;
+  flex-direction:column;
+  max-width:380px;
+  margin:90px auto;
   background:#fff;
   padding:28px;
   border-radius:12px;
-  box-shadow:0 8px 25px rgba(0,0,0,.12);
-  display:flex;
-  flex-direction:column;
+  box-shadow:0 8px 20px rgba(0,0,0,.12);
 }
-#loginBox h2{text-align:center;}
+
+#loginBox h2{
+  text-align:center;
+}
 
 #loginBox input{
   padding:12px;
-  margin-top:10px;
   border:1px solid #ddd;
   border-radius:8px;
 
-  /* 🔐 密碼模式 */
+  /* 密碼效果 */
   -webkit-text-security: disc;
   font-size:16px;
   letter-spacing:2px;
@@ -59,6 +61,7 @@ body{
 
 .title{
   font-weight:700;
+  font-size:16px;
 }
 
 .exitBtn{
@@ -74,53 +77,80 @@ body{
   color:#fff;
 }
 
-/* FILTER */
+/* FILTER (104風格 + 數字) */
 .filters{
   display:flex;
-  gap:8px;
-  padding:10px 14px;
+  gap:12px;
+  padding:14px;
   overflow-x:auto;
 }
 
 .filters button{
+  min-width:140px;
+  height:52px;
   border:none;
-  padding:8px 14px;
-  border-radius:20px;
-  background:#e9ecef;
+  border-radius:30px;
+  font-size:15px;
+  font-weight:600;
+  background:#eef2f7;
   cursor:pointer;
+  transition:.2s;
+  white-space:nowrap;
 }
 
 .filters button.active{
   background:#1976d2;
   color:#fff;
+  box-shadow:0 4px 12px rgba(25,118,210,.25);
 }
 
-/* CARD */
-.list{
-  padding:10px 14px;
+/* TABLE */
+.tableBox{
+  padding:0 14px 20px;
 }
 
-.card{
+table{
+  width:100%;
+  border-collapse:collapse;
   background:#fff;
-  padding:12px;
   border-radius:10px;
-  margin-bottom:10px;
-  box-shadow:0 1px 6px rgba(0,0,0,.06);
-  cursor:pointer;
-  transition:.2s;
-}
-.card:hover{
-  transform:translateY(-2px);
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
 }
 
-.badge{
-  padding:4px 10px;
-  border-radius:12px;
-  font-size:12px;
+th{
+  background:#1976d2;
+  color:#fff;
+  padding:12px;
+  font-size:14px;
 }
-.未簽核{background:#ffecec;color:#d32f2f;}
-.簽核中{background:#fff7e6;color:#ff8c00;}
-.已簽核{background:#e8f5e9;color:#2e7d32;}
+
+td{
+  padding:10px;
+  text-align:center;
+  border-bottom:1px solid #eee;
+}
+
+tr:hover{
+  background:#f5f7fa;
+  cursor:pointer;
+}
+
+/* BADGE */
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:90px;
+  height:32px;
+  border-radius:16px;
+  font-weight:700;
+  font-size:13px;
+}
+
+.badge-未簽核{ background:#ffebee; color:#d32f2f; }
+.badge-簽核中{ background:#fff3e0; color:#ef6c00; }
+.badge-已簽核{ background:#e8f5e9; color:#2e7d32; }
 
 /* MODAL */
 #overlay{
@@ -140,7 +170,7 @@ body{
   max-width:520px;
   background:#fff;
   border-radius:14px;
-  padding:16px;
+  padding:18px;
   box-shadow:0 10px 30px rgba(0,0,0,.25);
 }
 
@@ -152,53 +182,44 @@ body{
   height:32px;
   border-radius:50%;
   border:none;
-  cursor:pointer;
   background:#eee;
+  cursor:pointer;
 }
-.closeBtn:hover{background:#ff4d4f;color:#fff;}
-
-/* timeline */
-.timeline{
-  margin:10px 0;
-  padding-left:10px;
-  border-left:3px solid #eee;
-}
-.step{
-  margin:6px 0;
-  font-size:13px;
-  color:#999;
-}
-.step.done{color:#2e7d32;font-weight:600;}
-.step.active{color:#1976d2;font-weight:700;}
-
-/* textarea */
-textarea{
-  width:100%;
-  min-height:70px;
-  border-radius:8px;
-  border:1px solid #ddd;
-  padding:10px;
-  resize:none;
+.closeBtn:hover{
+  background:#ff4d4f;
+  color:#fff;
 }
 
-/* buttons */
+/* modal內容置中 */
+.modal-content{
+  text-align:center;
+  font-size:16px;
+  line-height:2;
+  margin-top:10px;
+}
+
+/* 按鈕（放大2倍） */
 .actionBtns{
   display:flex;
-  gap:10px;
-  margin-top:12px;
+  justify-content:center;
+  gap:20px;
+  margin-top:25px;
 }
 
-.approveBtn,.rejectBtn{
-  flex:1;
+.approveBtn,
+.rejectBtn{
+  width:180px;
+  height:70px;
+  font-size:24px;
+  font-weight:700;
   border:none;
-  padding:10px;
-  border-radius:8px;
-  color:#fff;
+  border-radius:14px;
   cursor:pointer;
+  color:#fff;
 }
 
-.approveBtn{background:#2e7d32;}
-.rejectBtn{background:#d32f2f;}
+.approveBtn{ background:#2e7d32; }
+.rejectBtn{ background:#d32f2f; }
 
 button:disabled{
   opacity:.6;
@@ -223,14 +244,31 @@ button:disabled{
     <button class="exitBtn" onclick="logout()">×</button>
   </div>
 
+  <!-- FILTER + COUNT -->
   <div class="filters">
-    <button onclick="setFilter('ALL')">全部</button>
-    <button onclick="setFilter('未簽核')">未簽核</button>
-    <button onclick="setFilter('簽核中')">簽核中</button>
-    <button onclick="setFilter('已簽核')">已簽核</button>
+    <button id="btnAll" onclick="setFilter('ALL')">全部 (0)</button>
+    <button id="btn1" onclick="setFilter('未簽核')">未簽核 (0)</button>
+    <button id="btn2" onclick="setFilter('簽核中')">簽核中 (0)</button>
+    <button id="btn3" onclick="setFilter('已簽核')">已簽核 (0)</button>
   </div>
 
-  <div class="list" id="list"></div>
+  <!-- TABLE -->
+  <div class="tableBox">
+    <table>
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>日期</th>
+          <th>時間</th>
+          <th>公司</th>
+          <th>狀態</th>
+          <th>原因</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
 </div>
 
 <!-- MODAL -->
@@ -241,15 +279,7 @@ button:disabled{
 
   <h3>簽核作業</h3>
 
-  <div id="info"></div>
-
-  <div class="timeline">
-    <div class="step done">✔ 申請送出</div>
-    <div class="step active">⏳ 主管簽核</div>
-    <div class="step">⏳ 總督導</div>
-  </div>
-
-  <textarea id="comment" placeholder="請輸入簽核意見"></textarea>
+  <div class="modal-content" id="mContent"></div>
 
   <div class="actionBtns">
     <button id="okBtn" class="approveBtn" onclick="submit(true)">✔ 核准</button>
@@ -262,7 +292,7 @@ const API="https://script.google.com/macros/s/AKfycbxxFjQj7wFbAcG55GXNTdIWZ0xrQt
 
 let code="", role="", name="";
 let listCache=[];
-let filter="未簽核";
+let filter="ALL";
 let currentKey="";
 
 async function login(){
@@ -285,49 +315,60 @@ function logout(){
   location.replace("https://script.google.com/macros/s/AKfycbxBaH8FGsqhonffJgszR2SYFUz0XpZZVzDQeEdHr_xVMQpj3NvAP1rT4ar3T5kMpmlpIA/exec");
 }
 
+/* FILTER */
 function setFilter(f){
   filter=f;
-  load();
-}
-
-async function load(){
-  const r=await fetch(`${API}?action=getLeaveData&code=${code}`).then(r=>r.json());
-  listCache=r.list;
   render();
 }
 
+/* LOAD DATA */
+async function load(){
+  const r=await fetch(`${API}?action=getLeaveData&code=${code}`).then(r=>r.json());
+
+  listCache=r.list;
+
+  // count
+  document.getElementById("btnAll").innerText=`全部 (${r.count.ALL})`;
+  document.getElementById("btn1").innerText=`未簽核 (${r.count['未簽核']})`;
+  document.getElementById("btn2").innerText=`簽核中 (${r.count['簽核中']})`;
+  document.getElementById("btn3").innerText=`已簽核 (${r.count['已簽核']})`;
+
+  render();
+}
+
+/* RENDER */
 function render(){
-  const box=document.getElementById("list");
-  box.innerHTML="";
+  const tb=document.getElementById("tbody");
+  tb.innerHTML="";
 
   listCache
     .filter(x=>filter==="ALL"||x.status===filter)
     .forEach(r=>{
-      const d=document.createElement("div");
-      d.className="card";
-      d.onclick=()=>open(r);
+      const tr=document.createElement("tr");
+      tr.onclick=()=>open(r);
 
-      d.innerHTML=`
-        <div><b>${r.userName}</b>
-        <span class="badge ${r.status}">${r.status}</span></div>
-        <div>${r.date} ${r.time}</div>
-        <div>${r.reason||""}</div>
+      tr.innerHTML=`
+        <td>${r.userName}</td>
+        <td>${r.date}</td>
+        <td>${r.time}</td>
+        <td>${r.company||""}</td>
+        <td><span class="badge badge-${r.status}">${r.status}</span></td>
+        <td>${r.reason||""}</td>
       `;
-      box.appendChild(d);
+      tb.appendChild(tr);
     });
 }
 
+/* MODAL */
 function open(r){
   currentKey=r.keyId;
 
-  document.getElementById("info").innerHTML=`
-    <div>姓名：${r.userName}</div>
-    <div>日期：${r.date}</div>
-    <div>時間：${r.time}</div>
-    <div>原因：${r.reason||""}</div>
+  document.getElementById("mContent").innerHTML=`
+    姓名：${r.userName}<br>
+    日期：${r.date}<br>
+    時間：${r.time}<br>
+    原因：${r.reason||""}
   `;
-
-  document.getElementById("comment").value="";
 
   document.getElementById("overlay").style.display="block";
   document.getElementById("modal").style.display="block";
@@ -338,10 +379,8 @@ function closeModal(){
   document.getElementById("modal").style.display="none";
 }
 
+/* SUBMIT */
 async function submit(ok){
-
-  const comment=document.getElementById("comment").value.trim();
-  if(!comment) return alert("請輸入意見");
 
   if(!confirm(ok?"確認核准？":"確認退回？")) return;
 
@@ -357,11 +396,10 @@ async function submit(ok){
     p.append("keyId",currentKey);
     p.append("approver",name);
     p.append("status",ok?"核准":"不准");
-    p.append("comment",comment);
 
     const res=await fetch(`${API}?${p}`).then(r=>r.json());
-    alert(res.message||"完成");
 
+    alert(res.message||"完成");
     closeModal();
     load();
 
