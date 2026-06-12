@@ -2,100 +2,1289 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>專業簽核系統</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>補打卡簽核中心</title>
 <style>
-:root { --primary: #00877a; --bg: #f5f7fa; --text: #333; }
-body { font-family: "PingFang TC", "Helvetica Neue", sans-serif; background: var(--bg); color: var(--text); margin:0; }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    font-family:
+        "Microsoft JhengHei",
+        Arial,
+        sans-serif;
+    background:#f5f7fb;
+    color:#333;
+}
+/* ======================
+   Login
+====================== */
 
-/* 專業列表風格 */
-.container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.filters { display: flex; gap: 10px; margin-bottom: 20px; }
-.filters button { padding: 8px 20px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
-.filters button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+#loginBox{
 
-.list-item { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-.list-item:hover { border: 1px solid var(--primary); }
+    display:flex;
+    flex-direction:column;
 
-/* Modal 圓形取消鈕 */
-#modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:25px; border-radius:12px; width:90%; max-width:450px; z-index:1000; box-shadow:0 10px 30px rgba(0,0,0,0.2);}
-.x-close { position:absolute; top:10px; right:10px; width:30px; height:30px; border-radius:50%; background:#eee; border:none; cursor:pointer; font-weight:bold; }
-.x-close:hover { background:#ddd; }
+    max-width:420px;
 
-/* 優化表格 (若保留表格) */
-table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; }
-th { background:#f8f9fa; color:#666; padding:12px; text-align:left; font-weight:500; border-bottom:2px solid #eee; }
-td { padding:12px; border-bottom:1px solid #eee; }
+    margin:80px auto;
+
+    background:#fff;
+
+    padding:30px;
+
+    border-radius:20px;
+
+    box-shadow:
+      0 8px 24px rgba(0,0,0,.12);
+}
+
+#loginBox h2{
+
+    text-align:center;
+
+    margin-bottom:20px;
+
+    color:#1976d2;
+}
+
+#loginBox input{
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #ddd;
+
+    border-radius:12px;
+
+    font-size:16px;
+}
+
+#loginBox button{
+
+    margin-top:15px;
+
+    border:none;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    background:#1976d2;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+}
+
+#loginBox button:hover{
+
+    background:#1565c0;
+}
+
+/* ======================
+   Main
+====================== */
+
+#mainCard{
+
+    display:none;
+
+    padding:20px;
+}
+
+/* ======================
+   Header
+====================== */
+
+.dashboardHeader{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+}
+
+.title{
+
+    font-size:30px;
+
+    font-weight:700;
+}
+
+.subTitle{
+
+    color:#777;
+
+    margin-top:4px;
+}
+
+.closeSystemBtn{
+
+    width:45px;
+
+    height:45px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#f44336;
+
+    color:white;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.closeSystemBtn:hover{
+
+    transform:scale(1.08);
+
+    background:#d32f2f;
+}
+
+/* ======================
+   Summary
+====================== */
+
+.summaryCards{
+
+    display:flex;
+
+    gap:16px;
+
+    margin-bottom:20px;
+}
+
+.summaryCard{
+
+    flex:1;
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:22px;
+
+    text-align:center;
+
+    box-shadow:
+      0 4px 16px rgba(0,0,0,.08);
+}
+
+.summaryCard .count{
+
+    font-size:34px;
+
+    font-weight:700;
+}
+
+.pending .count{
+    color:#d32f2f;
+}
+
+.processing .count{
+    color:#f57c00;
+}
+
+.done .count{
+    color:#388e3c;
+}
+
+.summaryCard .label{
+
+    margin-top:8px;
+
+    color:#666;
+}
+
+/* ======================
+   Search
+====================== */
+
+.searchBar{
+
+    margin-bottom:15px;
+}
+
+.searchBar input{
+
+    width:100%;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    border:1px solid #ddd;
+
+    font-size:16px;
+}
+
+/* ======================
+   Filter
+====================== */
+
+.filters{
+
+    display:flex;
+
+    gap:10px;
+
+    overflow-x:auto;
+
+    margin-bottom:15px;
+}
+
+.filters button{
+
+    border:none;
+
+    border-radius:30px;
+
+    padding:10px 18px;
+
+    background:#e0e0e0;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    white-space:nowrap;
+}
+
+.filters button.active{
+
+    background:#1976d2;
+
+    color:white;
+}
+
+/* ======================
+   Table
+====================== */
+
+.tableWrap{
+
+    background:white;
+
+    border-radius:18px;
+
+    overflow:auto;
+
+    box-shadow:
+      0 4px 16px rgba(0,0,0,.08);
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+th{
+
+    background:#1976d2;
+
+    color:white;
+
+    padding:12px;
+
+    position:sticky;
+
+    top:0;
+}
+
+td{
+
+    padding:12px;
+
+    border-bottom:1px solid #eee;
+
+    text-align:center;
+}
+
+tr:hover{
+
+    background:#eef5ff;
+}
+
+.badge{
+
+    display:inline-block;
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+    font-weight:bold;
+}
+
+.badge-未簽核{
+
+    color:#d32f2f;
+
+    border:1px solid #d32f2f;
+}
+
+.badge-簽核中{
+
+    background:#f57c00;
+
+    color:white;
+}
+
+.badge-已簽核{
+
+    background:#388e3c;
+
+    color:white;
+}
+/* ======================
+   Loading
+====================== */
+
+#loading{
+
+    display:none;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+
+    background:rgba(255,255,255,.8);
+
+    z-index:9998;
+
+    justify-content:center;
+    align-items:center;
+
+    font-size:20px;
+    font-weight:bold;
+
+    color:#1976d2;
+}
+
+/* ======================
+   Modal
+====================== */
+
+#overlay{
+
+    display:none;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+
+    background:rgba(0,0,0,.45);
+
+    z-index:999;
+}
+
+#modal{
+
+    display:none;
+
+    position:fixed;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    width:92%;
+    max-width:480px;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:24px;
+
+    z-index:1000;
+
+    box-shadow:
+      0 8px 30px rgba(0,0,0,.25);
+}
+
+#modal h3{
+
+    margin-bottom:18px;
+
+    color:#1976d2;
+}
+
+.modalRow{
+
+    margin-bottom:12px;
+
+    line-height:1.6;
+}
+
+.modalLabel{
+
+    font-weight:bold;
+}
+
+.modalClose{
+
+    position:absolute;
+
+    top:12px;
+    right:12px;
+
+    width:36px;
+    height:36px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#f44336;
+
+    color:white;
+
+    font-size:18px;
+
+    cursor:pointer;
+}
+
+.actionBtns{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+.approveBtn{
+
+    flex:1;
+
+    border:none;
+
+    background:#388e3c;
+
+    color:white;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+}
+
+.rejectBtn{
+
+    flex:1;
+
+    border:none;
+
+    background:#d32f2f;
+
+    color:white;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+}
+
+/* ======================
+   Mobile
+====================== */
+
+@media(max-width:768px){
+
+    .summaryCards{
+
+        flex-direction:column;
+    }
+
+    .title{
+
+        font-size:24px;
+    }
+
+    table{
+
+        font-size:14px;
+    }
+
+}
 </style>
+
 </head>
+
 <body>
 
-<div class="container">
-  <div class="header">
-    <h2>待辦簽核事項</h2>
-  </div>
-  
-  <div class="filters">
-    <button class="active" onclick="filterData('未簽核', this)">未簽核</button>
-    <button onclick="filterData('簽核中', this)">簽核中</button>
-    <button onclick="filterData('已簽核', this)">已簽核</button>
-  </div>
-
-  <div id="dataList">
-    </div>
+<div id="loading">
+    資料載入中...
 </div>
 
-<div id="overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);"></div>
+<!-- Login -->
+
+<div id="loginBox">
+
+    <h2>補打卡簽核中心</h2>
+
+    <input
+        id="loginCode"
+        type="text"
+        autocomplete="off"
+        placeholder="請輸入代碼">
+
+    <button onclick="login()">
+        登入
+    </button>
+
+</div>
+
+<!-- Main -->
+
+<div id="mainCard">
+
+    <div class="dashboardHeader">
+
+        <div>
+
+            <div class="title">
+                補打卡簽核中心
+            </div>
+
+            <div class="subTitle">
+                督導簽核平台
+            </div>
+
+        </div>
+
+        <button
+            class="closeSystemBtn"
+            onclick="closeSystem()">
+
+            ✕
+
+        </button>
+
+    </div>
+
+    <!-- 統計卡片 -->
+
+    <div class="summaryCards">
+
+        <div class="summaryCard pending">
+
+            <div
+                class="count"
+                id="pendingCount">
+
+                0
+
+            </div>
+
+            <div class="label">
+
+                待簽核
+
+            </div>
+
+        </div>
+
+        <div class="summaryCard processing">
+
+            <div
+                class="count"
+                id="processingCount">
+
+                0
+
+            </div>
+
+            <div class="label">
+
+                簽核中
+
+            </div>
+
+        </div>
+
+        <div class="summaryCard done">
+
+            <div
+                class="count"
+                id="doneCount">
+
+                0
+
+            </div>
+
+            <div class="label">
+
+                已完成
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 搜尋 -->
+
+    <div class="searchBar">
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="搜尋姓名..."
+            oninput="renderTable()">
+
+    </div>
+
+    <!-- 篩選 -->
+
+    <div class="filters">
+
+        <button
+            id="btnAll"
+            onclick="setStatus('ALL')">
+
+            全部
+
+        </button>
+
+        <button
+            id="btnPending"
+            onclick="setStatus('未簽核')">
+
+            未簽核
+
+        </button>
+
+        <button
+            id="btnProcessing"
+            onclick="setStatus('簽核中')">
+
+            簽核中
+
+        </button>
+
+        <button
+            id="btnDone"
+            onclick="setStatus('已簽核')">
+
+            已簽核
+
+        </button>
+
+    </div>
+
+    <!-- 表格 -->
+
+    <div class="tableWrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>姓名</th>
+                    <th>日期</th>
+                    <th>時間</th>
+                    <th>公司位置</th>
+                    <th>打卡狀態</th>
+                    <th>補打卡</th>
+                    <th>補打原因</th>
+                    <th>狀態</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tbody"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- Overlay -->
+
+<div id="overlay"></div>
+
+<!-- Modal -->
+
 <div id="modal">
-  <button class="x-close" onclick="closeModal()">✕</button>
-  <h3 style="margin-top:0;">簽核詳情</h3>
-  <div id="modalContent"></div>
-  <div style="display:flex; gap:10px; margin-top:20px;">
-    <button onclick="submit(true)" style="flex:1; padding:10px; background:var(--primary); color:white; border:none; border-radius:4px;">核准</button>
-    <button onclick="submit(false)" style="flex:1; padding:10px; background:#e0e0e0; border:none; border-radius:4px;">駁回</button>
-  </div>
+
+    <button
+        class="modalClose"
+        onclick="closeModal()">
+
+        ✕
+
+    </button>
+
+    <h3>簽核作業</h3>
+
+    <div class="modalRow">
+        <span class="modalLabel">姓名：</span>
+        <span id="modalName"></span>
+    </div>
+
+    <div class="modalRow">
+        <span class="modalLabel">補打卡：</span>
+        <span id="modalType"></span>
+    </div>
+
+    <div class="modalRow">
+        <span class="modalLabel">日期：</span>
+        <span id="modalDate"></span>
+    </div>
+
+    <div class="modalRow">
+        <span class="modalLabel">時間：</span>
+        <span id="modalTime"></span>
+    </div>
+
+    <div class="modalRow">
+        <span class="modalLabel">補打原因：</span>
+        <span id="modalReason"></span>
+    </div>
+
+    <div class="actionBtns">
+
+        <button
+            class="approveBtn"
+            onclick="submit(true)">
+
+            核准
+
+        </button>
+
+        <button
+            class="rejectBtn"
+            onclick="submit(false)">
+
+            不准
+
+        </button>
+
+    </div>
+
 </div>
 
-<script>
-let allData = []; // 快取全部資料
+  <script>
+
+const WEB_APP_URL =
+'https://script.google.com/macros/s/AKfycbxxFjQj7wFbAcG55GXNTdIWZ0xrQtMfKXSvW0bE7ujgTGO41mhd3gwfImDKoi5rIDdh/exec';
+
+let loginCode = '';
+let userRole = '';
+let approverName = '';
+
 let currentKey = null;
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxxFjQj7wFbAcG55GXNTdIWZ0xrQtMfKXSvW0bE7ujgTGO41mhd3gwfImDKoi5rIDdh/exec'; // 請填入您的連結
+let currentLevel = null;
 
-// 頁面初始化時執行
-async function init() {
-  const res = await fetch(`${WEB_APP_URL}?action=getLeaveData`).then(r=>r.json());
-  allData = res.list;
-  renderList('未簽核');
+let statusFilter = '未簽核';
+
+/* ==========
+   資料快取
+========== */
+
+let allData = [];
+
+/* ==========
+   DOM
+========== */
+
+const loginBox =
+document.getElementById('loginBox');
+
+const mainCard =
+document.getElementById('mainCard');
+
+const loading =
+document.getElementById('loading');
+
+loginBox.style.display = 'flex';
+mainCard.style.display = 'none';
+
+/* ==========
+   Login
+========== */
+
+async function login(){
+
+    const code =
+    document
+      .getElementById('loginCode')
+      .value
+      .trim();
+
+    if(!code){
+
+        alert('請輸入代碼');
+
+        return;
+    }
+
+    try{
+
+        loading.style.display='flex';
+
+        const res =
+        await fetch(
+          `${WEB_APP_URL}?action=checkLogin&code=${code}`
+        )
+        .then(r=>r.json());
+
+        if(!res){
+
+            alert('代碼無效');
+
+            return;
+        }
+
+        loginCode = code;
+
+        userRole = res.role;
+
+        approverName = res.approverName;
+
+        loginBox.style.display='none';
+
+        mainCard.style.display='block';
+
+        await loadData();
+
+        setStatus('未簽核');
+
+    }
+    catch(err){
+
+        console.error(err);
+
+        alert('登入失敗');
+    }
+    finally{
+
+        loading.style.display='none';
+    }
 }
 
-// 快速篩選 (不重新請求 API)
-function filterData(status, btn) {
-  document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderList(status);
+/* ==========
+   關閉系統
+========== */
+
+function closeSystem(){
+
+    window.location.replace(
+      'https://script.google.com/macros/s/AKfycbxBaH8FGsqhonffJgszR2SYFUz0XpZZVzDQeEdHr_xVMQpj3NvAP1rT4ar3T5kMpmlpIA/exec'
+    );
+
 }
 
-function renderList(status) {
-  const container = document.getElementById('dataList');
-  const filtered = allData.filter(item => item.status === status);
-  container.innerHTML = filtered.map(item => `
-    <div class="list-item" onclick="openModal('${item.keyId}')">
-      <div><strong>${item.userName}</strong><br><small>${item.date} ${item.time}</small></div>
-      <div>${item.補打卡}</div>
-    </div>
-  `).join('');
+/* ==========
+   篩選
+========== */
+
+function setStatus(status){
+
+    statusFilter = status;
+
+    document
+      .querySelectorAll('.filters button')
+      .forEach(btn =>
+        btn.classList.remove('active')
+      );
+
+    if(status==='ALL')
+      btnAll.classList.add('active');
+
+    if(status==='未簽核')
+      btnPending.classList.add('active');
+
+    if(status==='簽核中')
+      btnProcessing.classList.add('active');
+
+    if(status==='已簽核')
+      btnDone.classList.add('active');
+
+    renderTable();
 }
 
-function closeModal() {
-  document.getElementById('overlay').style.display = 'none';
-  document.getElementById('modal').style.display = 'none';
+/* ==========
+   讀取資料
+========== */
+
+async function loadData(){
+
+    try{
+
+        loading.style.display='flex';
+
+        const res =
+        await fetch(
+          `${WEB_APP_URL}?action=getLeaveData&code=${loginCode}`
+        )
+        .then(r=>r.json());
+
+        allData = res.list || [];
+
+        document.getElementById('pendingCount')
+          .textContent =
+          res.count['未簽核'] || 0;
+
+        document.getElementById('processingCount')
+          .textContent =
+          res.count['簽核中'] || 0;
+
+        document.getElementById('doneCount')
+          .textContent =
+          res.count['已簽核'] || 0;
+
+        btnAll.textContent =
+          `全部 (${res.count.ALL || 0})`;
+
+        btnPending.textContent =
+          `未簽核 (${res.count['未簽核'] || 0})`;
+
+        btnProcessing.textContent =
+          `簽核中 (${res.count['簽核中'] || 0})`;
+
+        btnDone.textContent =
+          `已簽核 (${res.count['已簽核'] || 0})`;
+
+        renderTable();
+
+    }
+    catch(err){
+
+        console.error(err);
+
+        alert('資料載入失敗');
+
+    }
+    finally{
+
+        loading.style.display='none';
+    }
 }
 
-function submit(ok){
-    alert(ok ? '已核准' : '已拒絕');
-    closeModal();
-    loadData();
+/* ==========
+   表格渲染
+========== */
+
+function renderTable(){
+
+    const tbody =
+    document.getElementById('tbody');
+
+    const keyword =
+    document
+      .getElementById('searchInput')
+      .value
+      .trim()
+      .toLowerCase();
+
+    let rows = [...allData];
+
+    /* 狀態篩選 */
+
+    if(statusFilter !== 'ALL'){
+
+        rows =
+        rows.filter(
+          r => r.status === statusFilter
+        );
+    }
+
+    /* 搜尋 */
+
+    if(keyword){
+
+        rows =
+        rows.filter(r => {
+
+            return (
+              (r.userName || '')
+              .toLowerCase()
+              .includes(keyword)
+            );
+
+        });
+
+    }
+
+    let html = '';
+
+    rows.forEach(r => {
+
+        const badge = `
+          <span
+            class="badge ${r.colorClass}">
+            ${r.status}
+          </span>
+        `;
+
+        html += `
+        <tr
+          data-key="${r.keyId}">
+
+            <td>${r.userName || ''}</td>
+
+            <td>${r.date || ''}</td>
+
+            <td>${r.time || ''}</td>
+
+            <td>${r.company || ''}</td>
+
+            <td>${r.punchStatus || ''}</td>
+
+            <td>${r.補打卡 || ''}</td>
+
+            <td>${r.reason || ''}</td>
+
+            <td>${badge}</td>
+
+        </tr>
+        `;
+
+    });
+
+    tbody.innerHTML = html;
+
+    /* 綁定點擊事件 */
+
+    rows.forEach((r,index)=>{
+
+        if(
+          (
+            userRole==='督導'
+            &&
+            r.status==='未簽核'
+          )
+          ||
+          (
+            userRole==='總督導'
+            &&
+            r.status==='簽核中'
+          )
+        ){
+
+            const tr =
+            tbody.children[index];
+
+            if(tr){
+
+                tr.style.cursor='pointer';
+
+                tr.onclick =
+                ()=>openModal(r);
+            }
+
+        }
+
+    });
+
 }
+/* ==========
+   開啟簽核視窗
+========== */
+
+function openModal(r){
+
+    currentKey = r.keyId;
+
+    currentLevel =
+    (
+      r.status === '簽核中'
+      &&
+      userRole === '總督導'
+    )
+    ? 2
+    : 1;
+
+    document.getElementById('modalName')
+      .textContent =
+      r.userName || '';
+
+    document.getElementById('modalType')
+      .textContent =
+      r.補打卡 || '';
+
+    document.getElementById('modalDate')
+      .textContent =
+      r.date || '';
+
+    document.getElementById('modalTime')
+      .textContent =
+      r.time || '';
+
+    document.getElementById('modalReason')
+      .textContent =
+      r.reason || '';
+
+    document.getElementById('overlay')
+      .style.display = 'block';
+
+    document.getElementById('modal')
+      .style.display = 'block';
+}
+
+/* ==========
+   關閉視窗
+========== */
+
+function closeModal(){
+
+    document.getElementById('overlay')
+      .style.display = 'none';
+
+    document.getElementById('modal')
+      .style.display = 'none';
+}
+
+/* 點背景關閉 */
+
+document.getElementById('overlay')
+  .addEventListener(
+    'click',
+    closeModal
+  );
+
+/* ==========
+   簽核送出
+========== */
+
+async function submit(ok){
+
+    if(!currentKey){
+
+        alert('資料異常');
+
+        return;
+    }
+
+    try{
+
+        loading.style.display='flex';
+
+        const params =
+        new URLSearchParams();
+
+        params.append(
+          'action',
+          'updateLeaveApproval'
+        );
+
+        params.append(
+          'keyId',
+          currentKey
+        );
+
+        params.append(
+          'level',
+          currentLevel
+        );
+
+        params.append(
+          'approver',
+          approverName
+        );
+
+        params.append(
+          'status',
+          ok
+            ? '核准'
+            : '不准'
+        );
+
+        const result =
+        await fetch(
+          `${WEB_APP_URL}?${params.toString()}`
+        )
+        .then(r=>r.json());
+
+        alert(
+          result.message ||
+          '簽核完成'
+        );
+
+        closeModal();
+
+        /* 重新抓一次最新資料 */
+
+        await loadData();
+
+        setStatus(statusFilter);
+
+    }
+    catch(err){
+
+        console.error(err);
+
+        alert('簽核失敗');
+
+    }
+    finally{
+
+        loading.style.display='none';
+    }
+}
+
+/* ==========
+   Enter 登入
+========== */
+
+document
+.getElementById('loginCode')
+.addEventListener(
+  'keypress',
+  function(e){
+
+      if(e.key === 'Enter'){
+
+          login();
+      }
+
+  }
+);
+
+/* ==========
+   預設狀態
+========== */
+
+btnPending.classList.add('active');
+
 </script>
+
 </body>
 </html>
