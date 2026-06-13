@@ -164,23 +164,19 @@ function openModal(r){
   window.currentLevel = (r.status==='簽核中' && userRole==='總督導') ? 2 : 1;
 }
 
-async function submit(ok, btn) {
-  const container = btn.parentElement;
-  const originalText = btn.innerText;
-  btn.innerText = '簽核中...';
-  container.querySelectorAll('button').forEach(b => b.disabled = true);
-  try {
-    const params = new URLSearchParams({action:'updateLeaveApproval', keyId:currentKey, level:currentLevel, approver:approverName, status:ok?'核准':'不准'});
-    const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r=>r.json());
-    alert(res.message || '簽核完成');
-    closeModal();
-    loadData();
-  } catch (e) {
-    alert('簽核失敗，請稍後再試');
-    btn.innerText = originalText;
-    container.querySelectorAll('button').forEach(b => b.disabled = false);
-  }
+async function submit(ok){
+  const params = new URLSearchParams();
+  params.append('action','updateLeaveApproval');
+  params.append('keyId',currentKey);
+  params.append('level',currentLevel);
+  params.append('approver',approverName);
+  params.append('status',ok?'核准':'不准');
+  const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r=>r.json());
+  alert(res.message || '簽核完成');
+  closeModal(); 
+  loadData();
 }
+
 </script>
 </body>
 </html>
