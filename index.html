@@ -63,13 +63,20 @@
     table, thead, tbody, th, td, tr { display:block; }
     thead { display:none; }
     tr { background:#fff; margin-bottom:12px; padding:15px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
-    td { display:flex; justify-content:space-between; padding:6px 0; border:none; }
+    td { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border:none; }
     td::before { content:attr(data-label); font-weight:bold; color:#555; }
     
-    /* === 手機版簽核按鈕加大 50% === */
+    /* 簽核按鈕加大 50% */
     .btn-approve, .btn-reject {
-      padding: 21px; /* 原為 14px，加大 50% 約為 21px */
-      font-size: 1.1em; /* 稍微調大字體以保持視覺協調 */
+      padding: 21px; 
+      font-size: 1.1em;
+    }
+
+    /* 狀態按鈕 (Badge) 加大 50% */
+    .badge {
+      padding: 6px 15px;      /* 原為 4px 10px */
+      font-size: 1.275em;     /* 原為 0.85em */
+      border-radius: 18px;    /* 圓角同步調大 */
     }
   }
 </style>
