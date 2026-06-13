@@ -30,13 +30,45 @@
   .badge-已簽核 { background:#e8f5e9; color:#388e3c; }
 
   #overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:999; }
-  #modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border-radius:16px; width:90%; max-width:400px; z-index:1000; box-shadow:0 10px 25px rgba(0,0,0,0.2); }
-  /* 修正：彈跳視窗的關閉鍵樣式 */
-  .modal-close { position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:50%; border:none; background:#eee; font-size:18px; cursor:pointer; }
-  .modal-item { margin:10px 0; }
-  .modal-label { color:#666; font-size:0.9em; }
-  .modal-val { font-weight:bold; font-size:1.1em; }
-  
+  /* 專業版彈跳視窗樣式 */
+#modal { 
+  display: none; 
+  position: fixed; 
+  top: 50%; left: 50%; 
+  transform: translate(-50%, -50%); 
+  background: #ffffff; 
+  padding: 30px; 
+  border-radius: 16px; 
+  width: 90%; 
+  max-width: 450px; 
+  z-index: 1000; 
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  border: 1px solid #f0f0f0;
+}
+
+.modal-close { 
+  position: absolute; top: 15px; right: 15px; 
+  width: 32px; height: 32px; 
+  border-radius: 50%; border: none; 
+  background: #f5f5f5; font-size: 18px; 
+  cursor: pointer; transition: background 0.2s;
+}
+.modal-close:hover { background: #e0e0e0; }
+
+.modal-item { margin: 18px 0; }
+.modal-label { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.modal-val { font-weight: 600; font-size: 1.15rem; color: #333; margin-top: 4px; }
+
+/* 按鈕區塊 */
+.btn-action {
+  flex: 1; padding: 14px; border: none; border-radius: 8px; 
+  font-weight: 600; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+}
+.btn-action:active { transform: scale(0.98); }
+.btn-approve { background: #2e7d32; color: #fff; }
+.btn-approve:hover { background: #1b5e20; }
+.btn-reject { background: #c62828; color: #fff; }
+.btn-reject:hover { background: #b71c1c; }
   @media (max-width:600px){
     table, thead, tbody, th, td, tr { display:block; }
     thead { display:none; }
@@ -82,10 +114,10 @@
   <div class="modal-item"><div class="modal-label">姓名</div><div class="modal-val" id="modalName"></div></div>
   <div class="modal-item"><div class="modal-label">補打卡</div><div class="modal-val" id="modalType"></div></div>
   <div class="modal-item"><div class="modal-label">原因</div><div class="modal-val" id="modalReason"></div></div>
-  <div style="display:flex; gap:10px; margin-top:20px;">
-    <button style="flex:1; padding:12px; border:none; border-radius:8px; background:#388e3c; color:#fff;" onclick="submit(true)">核准</button>
-    <button style="flex:1; padding:12px; border:none; border-radius:8px; background:#d32f2f; color:#fff;" onclick="submit(false)">不准</button>
-  </div>
+  <div style="display:flex; gap:15px; margin-top:25px;">
+  <button class="btn-action btn-approve" onclick="submit(true)">核准</button>
+  <button class="btn-action btn-reject" onclick="submit(false)">不准</button>
+</div>
 </div>
 
 <script>
