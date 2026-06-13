@@ -6,13 +6,14 @@
 <title>補打卡簽核系統</title>
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f8; margin:0; padding:0; }
-  
-  /* 設定所有互動元素為手型游標 */
   button, tr { cursor: pointer; }
 
   #loginBox { display:flex; flex-direction:column; max-width:400px; margin:80px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.1);}
   #loginBox h2 { margin:0 0 20px 0; text-align:center; }
-  #loginBox input { padding:14px; margin:8px 0; font-size:1em; border-radius:8px; border:1px solid #ccc; width:100%; box-sizing:border-box;}
+  
+  /* 改為一般文字輸入，不再觸發密碼警示 */
+  #loginCode { padding:14px; margin:8px 0; font-size:1em; border-radius:8px; border:1px solid #ccc; width:100%; box-sizing:border-box; }
+  
   #loginBox button { padding:14px; margin-top:12px; font-size:1em; border:none; border-radius:8px; background:#1976d2; color:#fff; font-weight:bold; }
   
   #mainCard { display:none; padding:15px; max-width: 800px; margin: 0 auto; }
@@ -60,7 +61,7 @@
 
 <div id="loginBox">
   <h2>補打卡簽核</h2>
-  <input id="loginCode" type="password" autocomplete="off" placeholder="請輸入代碼">
+  <input id="loginCode" type="text" placeholder="請輸入代碼">
   <button onclick="login()">登入</button>
 </div>
 
@@ -95,7 +96,7 @@
 </div>
 
 <script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzG-wHxg-fUlZe9UaG6-rx-goRGyjsoQWhqQZp5ei7VzfLIyplg22hKz2FzqPMG_Giz/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyVxGahA5dsmcDzCfRkjdehVd1gJRgR2JEpfDScniBnEgtTCDi8zflObme-mLoM6AA4/exec';
 let loginCode='', userRole='', approverName='', statusFilter='未簽核', allData=[];
 
 async function login(){
@@ -114,9 +115,11 @@ async function login(){
   } catch(e) { alert('系統錯誤'); btn.textContent = '登入'; btn.disabled = false; }
 }
 
-// 修改：直接清空頁面內容而不轉跳
 function logout(){
-  window.location.replace('about:blank');
+  document.getElementById('mainCard').style.display = 'none';
+  document.getElementById('loginBox').style.display = 'flex';
+  document.getElementById('loginCode').value = '';
+  loginCode = ''; userRole = ''; approverName = ''; allData = [];
 }
 
 function closeModal(){ document.getElementById('overlay').style.display = document.getElementById('modal').style.display = 'none'; }
@@ -176,12 +179,11 @@ async function submit(ok, btn) {
     closeModal();
     loadData();
   } catch (e) {
-    alert('簽核失敗，請稍後再試');
+    alert('簽核失敗，請確認後端已開啟 CORS 權限');
     btn.innerText = originalText;
     container.querySelectorAll('button').forEach(b => b.disabled = false);
   }
 }
-
 </script>
 </body>
 </html>
