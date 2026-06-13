@@ -8,6 +8,7 @@
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f8; margin:0; padding:0; }
   #loginBox { display:flex; flex-direction:column; max-width:400px; margin:80px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.1);}
   #loginBox h2 { margin:0 0 20px 0; text-align:center; }
+  /* 修正：輸入代碼恢復密碼型態 (type="password") */
   #loginBox input { padding:14px; margin:8px 0; font-size:1em; border-radius:8px; border:1px solid #ccc; width:100%; box-sizing:border-box;}
   #loginBox button { padding:14px; margin-top:12px; font-size:1em; border:none; border-radius:8px; background:#1976d2; color:#fff; cursor:pointer; font-weight:bold; }
   
@@ -30,6 +31,8 @@
 
   #overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:999; }
   #modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border-radius:16px; width:90%; max-width:400px; z-index:1000; box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+  /* 修正：彈跳視窗的關閉鍵樣式 */
+  .modal-close { position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:50%; border:none; background:#eee; font-size:18px; cursor:pointer; }
   .modal-item { margin:10px 0; }
   .modal-label { color:#666; font-size:0.9em; }
   .modal-val { font-weight:bold; font-size:1.1em; }
@@ -38,8 +41,10 @@
     table, thead, tbody, th, td, tr { display:block; }
     thead { display:none; }
     tr { background:#fff; margin-bottom:12px; padding:15px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
-    td { display:flex; justify-content:space-between; padding:6px 0; border:none; }
+    td { display:flex; justify-content:space-between; padding:6px 0; border:none; align-items:center; }
     td::before { content:attr(data-label); font-weight:bold; color:#555; }
+    /* 手機版 badge 放大 30% */
+    .badge { font-size: 1.1em; padding: 6px 14px; }
   }
 </style>
 </head>
@@ -47,7 +52,8 @@
 
 <div id="loginBox">
   <h2>補打卡簽核</h2>
-  <input id="loginCode" type="text" placeholder="請輸入代碼">
+  <!-- 修正：type="password" -->
+  <input id="loginCode" type="password" placeholder="請輸入代碼">
   <button onclick="login()">登入</button>
 </div>
 
@@ -70,6 +76,8 @@
 
 <div id="overlay"></div>
 <div id="modal">
+  <!-- 修正：加入關閉按鈕 -->
+  <button class="modal-close" onclick="closeModal()">×</button>
   <h3>簽核確認</h3>
   <div class="modal-item"><div class="modal-label">姓名</div><div class="modal-val" id="modalName"></div></div>
   <div class="modal-item"><div class="modal-label">補打卡</div><div class="modal-val" id="modalType"></div></div>
@@ -97,6 +105,11 @@ async function login(){
 
 function logout(){
   window.location.replace('https://script.google.com/macros/s/AKfycbxBaH8FGsqhonffJgszR2SYFUz0XpZZVzDQeEdHr_xVMQpj3NvAP1rT4ar3T5kMpmlpIA/exec');
+}
+
+function closeModal(){
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('modal').style.display = 'none';
 }
 
 async function loadData(){
