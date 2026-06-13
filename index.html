@@ -12,8 +12,19 @@
   #loginBox h2 { margin:0 0 20px 0; text-align:center; }
   
   /* 改為一般文字輸入，不再觸發密碼警示 */
-  #loginCode { padding:14px; margin:8px 0; font-size:1em; border-radius:8px; border:1px solid #ccc; width:100%; box-sizing:border-box; }
+  #loginCode {
+  padding: 14px;
+  margin: 8px 0;
+  font-size: 1em;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
   
+  /* 關鍵設定：隱藏文字並顯示為圓點 */
+  -webkit-text-security: disc; 
+  text-security: disc;
+}
   #loginBox button { padding:14px; margin-top:12px; font-size:1em; border:none; border-radius:8px; background:#1976d2; color:#fff; font-weight:bold; }
   
   #mainCard { display:none; padding:15px; max-width: 800px; margin: 0 auto; }
@@ -49,19 +60,25 @@
   button:disabled { cursor:not-allowed; opacity:0.6; }
 
   @media (max-width:600px){
-    table, thead, tbody, th, td, tr { display:block; }
-    thead { display:none; }
-    tr { background:#fff; margin-bottom:12px; padding:15px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
-    td { display:flex; justify-content:space-between; padding:6px 0; border:none; }
-    td::before { content:attr(data-label); font-weight:bold; color:#555; }
+  table, thead, tbody, th, td, tr { display:block; }
+  thead { display:none; }
+  tr { background:#fff; margin-bottom:12px; padding:15px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
+  td { display:flex; justify-content:space-between; padding:6px 0; border:none; }
+  td::before { content:attr(data-label); font-weight:bold; color:#555; }
+
+  /* --- 新增這一段來加大按鈕 --- */
+  .btn-action { 
+    padding: 20px 0; /* 加大垂直點擊面積 */
+    font-size: 1.2rem; /* 字體放大 */
   }
+}
 </style>
 </head>
 <body>
 
 <div id="loginBox">
   <h2>補打卡簽核</h2>
-  <input id="loginCode" type="text" placeholder="請輸入代碼">
+  <input id="loginCode" type="text" placeholder="請輸入代碼" autocomplete="off">
   <button onclick="login()">登入</button>
 </div>
 
