@@ -60,18 +60,18 @@
   button:disabled { cursor:not-allowed; opacity:0.6; }
 
   @media (max-width:600px){
-  table, thead, tbody, th, td, tr { display:block; }
-  thead { display:none; }
-  tr { background:#fff; margin-bottom:12px; padding:15px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
-  td { display:flex; justify-content:space-between; padding:6px 0; border:none; }
-  td::before { content:attr(data-label); font-weight:bold; color:#555; }
-
-  /* --- 新增這一段來加大按鈕 --- */
-  .btn-action { 
-    padding: 24px 0; /* 加大垂直點擊面積 */
-    font-size: 1.6rem; /* 字體放大 */
+    table, thead, tbody, th, td, tr { display:block; }
+    thead { display:none; }
+    tr { background:#fff; margin-bottom:12px; padding:15px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
+    td { display:flex; justify-content:space-between; padding:6px 0; border:none; }
+    td::before { content:attr(data-label); font-weight:bold; color:#555; }
+    
+    /* === 手機版簽核按鈕加大 50% === */
+    .btn-approve, .btn-reject {
+      padding: 21px; /* 原為 14px，加大 50% 約為 21px */
+      font-size: 1.1em; /* 稍微調大字體以保持視覺協調 */
+    }
   }
-}
 </style>
 </head>
 <body>
