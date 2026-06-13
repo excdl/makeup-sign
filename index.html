@@ -162,39 +162,18 @@ function openModal(r){
 }
 
 async function submit(ok){
-  // 顯示處理中的狀態 (選用，避免使用者重複點擊)
-  const btn = event.target;
-  const originalText = btn.textContent;
-  btn.textContent = '處理中...';
-  btn.disabled = true;
+  const params = new URLSearchParams();
+  params.append('action','updateLeaveApproval');
+  params.append('keyId',currentKey);
+  params.append('level',currentLevel);
+  params.append('approver',approverName);
+  params.append('status',ok?'核准':'不准');
+  const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r=>r.json());
+  alert(res.message || '簽核完成');
+  closeModal(); 
+  loadData();
+}
 
-  try {
-    const params = new URLSearchParams({
-      action: 'updateLeaveApproval', 
-      keyId: window.currentKey, 
-      level: window.currentLevel, 
-      approver: approverName, 
-      status: ok ? '核准' : '不准'
-    });
-    
-    // 等待後端回應
-    const response = await fetch(`${WEB_APP_URL}?${params.toString()}`);
-    
-    if (response.ok) {
-      // 成功後關閉視窗並重新載入資料
-      closeModal();
-      await loadData();
-    } else {
-      alert('伺服器處理失敗，請稍後再試');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('連線錯誤，請檢查網路狀態');
-  } finally {
-    // 恢復按鈕狀態
-    btn.textContent = originalText;
-    btn.disabled = false;
-  }
 }
 </script>
 </body>
