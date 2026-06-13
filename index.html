@@ -31,24 +31,28 @@
   .header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; }
   .closeBtn-round { width:40px; height:40px; border-radius:50%; border:none; background:#d32f2f; color:#fff; font-size:20px; display:flex; align-items:center; justify-content:center; }
   
-  /* 篩選器按鈕區塊 */
-  .filters { 
-    display:flex; overflow-x:auto; gap:10px; margin-bottom:15px; padding-bottom:5px;
-  }
-  
-  .filters button { 
-    padding: 12px 24px;       /* 增加一點點內距，讓放大後的文字有空間 */
-    border: none; 
-    border-radius: 25px; 
-    font-weight: bold; 
-    background: #e0e0e0; 
-    white-space: nowrap;
-    
-    /* === 文字放大 20% === */
-    font-size: 1.2em;         /* 將原本的 1em 放大至 1.5em */
-  }
-  
-  .filters button.active { background:#1976d2; color:#fff; }
+  .filters {
+  display:flex;
+  overflow-x:auto;
+  gap:10px;
+  margin-bottom:15px;
+  padding-bottom:5px;
+}
+
+.filters button {
+  padding:8px 16px;
+  border:none;
+  border-radius:20px;
+  font-weight:bold;
+  font-size:110%; /* 文字放大 10% */
+  background:#e0e0e0;
+  white-space:nowrap;
+}
+
+.filters button.active {
+  background:#1976d2;
+  color:#fff;
+}
   
   table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; }
   th { background:#1976d2; color:#fff; padding:12px; }
