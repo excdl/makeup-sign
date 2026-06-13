@@ -200,16 +200,32 @@ function openModal(r){
 async function submit(ok, btn) {
   const container = btn.parentElement;
   const originalText = btn.innerText;
+  
+  // 1. 執行中狀態
   btn.innerText = '簽核中...';
   container.querySelectorAll('button').forEach(b => b.disabled = true);
+  
   try {
-    const params = new URLSearchParams({action:'updateLeaveApproval', keyId:currentKey, level:currentLevel, approver:approverName, status:ok?'核准':'不准'});
-    const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r=>r.json());
+    const params = new URLSearchParams({
+      action: 'updateLeaveApproval', 
+      keyId: currentKey, 
+      level: currentLevel, 
+      approver: approverName, 
+      status: ok ? '核准' : '不准'
+    });
+    
+    const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r => r.json());
     alert(res.message || '簽核完成');
+    
+    // 成功後關閉 modal 並重新載入
     closeModal();
     loadData();
+    
   } catch (e) {
+    console.error(e);
     alert('簽核失敗，請確認後端已開啟 CORS 權限');
+  } finally {
+    // 2. 無論成功或失敗，這段一定會執行，確保按鈕恢復
     btn.innerText = originalText;
     container.querySelectorAll('button').forEach(b => b.disabled = false);
   }
