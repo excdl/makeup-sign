@@ -133,12 +133,25 @@ async function login(){
 }
 
 function logout(){
+  // 1. 隱藏主介面
   document.getElementById('mainCard').style.display = 'none';
+  // 2. 顯示登入框
   document.getElementById('loginBox').style.display = 'flex';
+  
+  // 3. 清空輸入框內容
   document.getElementById('loginCode').value = '';
-  loginCode = ''; userRole = ''; approverName = ''; allData = [];
+  
+  // 4. 重置登入按鈕狀態 (這是解決您問題的關鍵)
+  const loginBtn = document.querySelector('#loginBox button');
+  loginBtn.textContent = '登入';
+  loginBtn.disabled = false;
+  
+  // 5. 清空全域變數
+  loginCode = '';
+  userRole = '';
+  approverName = '';
+  allData = [];
 }
-
 function closeModal(){ document.getElementById('overlay').style.display = document.getElementById('modal').style.display = 'none'; }
 
 async function loadData(){
