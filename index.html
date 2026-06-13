@@ -215,45 +215,31 @@ function openModal(r){
   window.currentLevel = (r.status==='簽核中' && userRole==='總督導') ? 2 : 1;
 }
 
-async function submit(ok) {
-  // 1. 取得 modal 內的所有按鈕
-  const buttons = document.querySelectorAll('#modal .btn-action');
-  
-  // 2. 進入處理中狀態：變更文字並鎖定按鈕
-  buttons.forEach(btn => {
-    btn.disabled = true;
-    btn.textContent = '簽核中...';
-  });
+async function submit(ok, buttonElement) {
+  // 1. 儲存原始文字並將按鈕設為處理中
+  const originalText = buttonElement.innerText;
+  buttonElement.innerText = '簽核中...';
+  buttonElement.disabled = true; // 禁用按鈕防止重複送出
 
   try {
-    const params = new URLSearchParams({
-      action: 'updateLeaveApproval',
-      keyId: window.currentKey,
-      level: window.currentLevel,
-      approver: approverName,
-      status: ok ? '核准' : '不准'
-    });
+    const params = new URLSearchParams();
+    params.append('action', 'updateLeaveApproval');
+    params.append('keyId', currentKey);
+    params.append('level', currentLevel);
+    params.append('approver', approverName);
+    params.append('status', ok ? '核准' : '不准');
 
-    // 3. 發送請求
-    const response = await fetch(`${WEB_APP_URL}?${params.toString()}`);
-    const res = await response.json();
+    const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r => r.json());
     
-    // 4. 執行後續動作
     alert(res.message || '簽核完成');
     closeModal();
-    await loadData();
-    
+    loadData();
   } catch (error) {
     console.error('簽核失敗:', error);
-    alert('簽核過程發生錯誤，請稍後再試。');
-  } finally {
-    // 5. 無論成功失敗，恢復按鈕狀態
-    buttons.forEach(btn => {
-      btn.disabled = false;
-      // 恢復原本的文字 (依照您的需求調整)
-      if (btn.classList.contains('btn-approve')) btn.textContent = '核准申請';
-      else btn.textContent = '駁回';
-    });
+    alert('簽核過程發生錯誤，請稍後再試');
+    // 發生錯誤時恢復按鈕讓使用者重試
+    buttonElement.innerText = originalText;
+    buttonElement.disabled = false;
   }
 }
 
