@@ -73,10 +73,15 @@
     }
 
     /* 狀態按鈕 (Badge) 加大 50% */
+    /* 簽核狀態徽章 (Badge) 優化 */
     .badge {
-      padding: 6px 15px;      /* 原為 4px 10px */
-      font-size: 1.275em;     /* 原為 0.85em */
-      border-radius: 18px;    /* 圓角同步調大 */
+      display: inline-block;
+      padding: 12px 20px;       /* 增加上下左右內距，大幅提升點擊面積 */
+      font-size: 1em;           /* 維持 1em 讓字體保持清晰，避免過大 */
+      border-radius: 20px;      /* 圓角加大更像按鈕 */
+      min-width: 80px;          /* 設定最小寬度，確保無論字數多少都好按 */
+      text-align: center;       /* 文字置中 */
+      touch-action: manipulation; /* 提升手機觸控反應 */
     }
   }
 </style>
