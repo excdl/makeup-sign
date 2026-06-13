@@ -6,91 +6,61 @@
 <title>補打卡簽核系統</title>
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f8; margin:0; padding:0; }
+  
+  /* 設定所有互動元素為手型游標 */
+  button, tr { cursor: pointer; }
+
   #loginBox { display:flex; flex-direction:column; max-width:400px; margin:80px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.1);}
   #loginBox h2 { margin:0 0 20px 0; text-align:center; }
-  /* 修正：輸入代碼恢復密碼型態 (type="password") */
   #loginBox input { padding:14px; margin:8px 0; font-size:1em; border-radius:8px; border:1px solid #ccc; width:100%; box-sizing:border-box;}
-  #loginBox button { padding:14px; margin-top:12px; font-size:1em; border:none; border-radius:8px; background:#1976d2; color:#fff; cursor:pointer; font-weight:bold; }
+  #loginBox button { padding:14px; margin-top:12px; font-size:1em; border:none; border-radius:8px; background:#1976d2; color:#fff; font-weight:bold; }
   
   #mainCard { display:none; padding:15px; max-width: 800px; margin: 0 auto; }
   .header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; }
-  .closeBtn-round { width:40px; height:40px; border-radius:50%; border:none; background:#d32f2f; color:#fff; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .closeBtn-round { width:40px; height:40px; border-radius:50%; border:none; background:#d32f2f; color:#fff; font-size:20px; display:flex; align-items:center; justify-content:center; }
   
   .filters { display:flex; overflow-x:auto; gap:10px; margin-bottom:15px; padding-bottom:5px; }
-  .filters button { padding:8px 16px; border:none; border-radius:20px; font-weight:bold; background:#e0e0e0; cursor:pointer; white-space:nowrap; }
+  .filters button { padding:8px 16px; border:none; border-radius:20px; font-weight:bold; background:#e0e0e0; white-space:nowrap; }
   .filters button.active { background:#1976d2; color:#fff; }
   
   table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; }
   th { background:#1976d2; color:#fff; padding:12px; }
   td { padding:12px; border-bottom:1px solid #eee; text-align:center; }
-  
+  tr:hover { background: #f0f7ff; }
+
   .badge { padding:4px 10px; border-radius:12px; font-size:0.85em; font-weight:bold; }
   .badge-未簽核 { background:#ffebee; color:#d32f2f; }
   .badge-簽核中 { background:#fff3e0; color:#f57c00; }
   .badge-已簽核 { background:#e8f5e9; color:#388e3c; }
 
   #overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:999; }
-  /* 專業版彈跳視窗樣式 */
-#modal { 
-  display: none; 
-  position: fixed; 
-  top: 50%; left: 50%; 
-  transform: translate(-50%, -50%); 
-  background: #ffffff; 
-  padding: 30px; 
-  border-radius: 16px; 
-  width: 90%; 
-  max-width: 450px; 
-  z-index: 1000; 
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  border: 1px solid #f0f0f0;
-}
+  #modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:30px; border-radius:16px; width:90%; max-width:450px; z-index:1000; box-shadow:0 20px 40px rgba(0,0,0,0.2); }
+  
+  .modal-close { position:absolute; top:15px; right:15px; width:32px; height:32px; border-radius:50%; border:none; background:#f5f5f5; font-size:18px; }
+  .modal-item { margin:18px 0; }
+  .modal-label { color:#888; font-size:0.85rem; }
+  .modal-val { font-weight:600; font-size:1.15rem; color:#333; margin-top:4px; }
 
-.modal-close { 
-  position: absolute; top: 15px; right: 15px; 
-  width: 32px; height: 32px; 
-  border-radius: 50%; border: none; 
-  background: #f5f5f5; font-size: 18px; 
-  cursor: pointer; transition: background 0.2s;
-}
-.modal-close:hover { background: #e0e0e0; }
+  .btn-action { flex:1; padding:14px; border:none; border-radius:8px; font-weight:600; transition:transform 0.1s; }
+  .btn-action:active { transform:scale(0.95); }
+  .btn-approve { background:#2e7d32; color:#fff; }
+  .btn-reject { background:#c62828; color:#fff; }
+  button:disabled { cursor:not-allowed; opacity:0.6; }
 
-.modal-item { margin: 18px 0; }
-.modal-label { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.modal-val { font-weight: 600; font-size: 1.15rem; color: #333; margin-top: 4px; }
-
-/* 按鈕區塊 */
-.btn-action {
-  flex: 1; padding: 14px; border: none; border-radius: 8px; 
-  font-weight: 600; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
-}
-.btn-action:active { transform: scale(0.98); }
-.btn-approve { background: #2e7d32; color: #fff; }
-.btn-approve:hover { background: #1b5e20; }
-.btn-reject { background: #c62828; color: #fff; }
-.btn-reject:hover { background: #b71c1c; }
   @media (max-width:600px){
     table, thead, tbody, th, td, tr { display:block; }
     thead { display:none; }
     tr { background:#fff; margin-bottom:12px; padding:15px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
-    td { display:flex; justify-content:space-between; padding:6px 0; border:none; align-items:center; }
+    td { display:flex; justify-content:space-between; padding:6px 0; border:none; }
     td::before { content:attr(data-label); font-weight:bold; color:#555; }
-    /* 手機版 badge 放大 30% */
-    .badge { font-size: 1.1em; padding: 6px 14px; }
   }
-  /* 確保所有按鈕游標為手型 */
-button { cursor: pointer; }
-
-/* 若按鈕被禁用時，游標變為禁止符號 */
-button:disabled { cursor: not-allowed; opacity: 0.7; }
 </style>
 </head>
 <body>
 
 <div id="loginBox">
   <h2>補打卡簽核</h2>
-  <!-- 修正：type="password" -->
-  <input id="loginCode" type="text" autocomplete="off" placeholder="請輸入代碼" style="font-family: 'text-security-disc'; -webkit-text-security: disc;">
+  <input id="loginCode" type="password" autocomplete="off" placeholder="請輸入代碼">
   <button onclick="login()">登入</button>
 </div>
 
@@ -113,16 +83,15 @@ button:disabled { cursor: not-allowed; opacity: 0.7; }
 
 <div id="overlay"></div>
 <div id="modal">
-  <!-- 修正：加入關閉按鈕 -->
   <button class="modal-close" onclick="closeModal()">×</button>
   <h3>簽核確認</h3>
   <div class="modal-item"><div class="modal-label">姓名</div><div class="modal-val" id="modalName"></div></div>
   <div class="modal-item"><div class="modal-label">補打卡</div><div class="modal-val" id="modalType"></div></div>
   <div class="modal-item"><div class="modal-label">原因</div><div class="modal-val" id="modalReason"></div></div>
   <div style="display:flex; gap:15px; margin-top:25px;">
-  <button class="btn-action btn-approve" onclick="submit(true)">核准</button>
-  <button class="btn-action btn-reject" onclick="submit(false)">不准</button>
-</div>
+    <button class="btn-action btn-approve" onclick="submit(true, this)">核准</button>
+    <button class="btn-action btn-reject" onclick="submit(false, this)">不准</button>
+  </div>
 </div>
 
 <script>
@@ -133,38 +102,24 @@ async function login(){
   const btn = document.querySelector('#loginBox button');
   const code = document.getElementById('loginCode').value.trim();
   if(!code) return;
-
-  // 切換為登入中
   btn.textContent = '登入中...';
   btn.disabled = true;
-
   try {
     const res = await fetch(`${WEB_APP_URL}?action=checkLogin&code=${code}`).then(r=>r.json());
-    if(!res) {
-      alert('代碼無效');
-      btn.textContent = '登入';
-      btn.disabled = false;
-      return;
-    }
+    if(!res) { alert('代碼無效'); btn.textContent = '登入'; btn.disabled = false; return; }
     loginCode = code; userRole = res.role; approverName = res.approverName;
     document.getElementById('loginBox').style.display='none';
     document.getElementById('mainCard').style.display='block';
     loadData();
-  } catch(e) {
-    alert('系統錯誤，請稍後再試');
-    btn.textContent = '登入';
-    btn.disabled = false;
-  }
+  } catch(e) { alert('系統錯誤'); btn.textContent = '登入'; btn.disabled = false; }
 }
 
+// 修改：直接清空頁面內容而不轉跳
 function logout(){
-  window.location.replace('https://script.google.com/macros/s/AKfycbxBaH8FGsqhonffJgszR2SYFUz0XpZZVzDQeEdHr_xVMQpj3NvAP1rT4ar3T5kMpmlpIA/exec');
+  window.location.replace('about:blank');
 }
 
-function closeModal(){
-  document.getElementById('overlay').style.display = 'none';
-  document.getElementById('modal').style.display = 'none';
-}
+function closeModal(){ document.getElementById('overlay').style.display = document.getElementById('modal').style.display = 'none'; }
 
 async function loadData(){
   const res = await fetch(`${WEB_APP_URL}?action=getLeaveData&code=${loginCode}`).then(r=>r.json());
@@ -192,13 +147,7 @@ function renderTable(){
   allData.forEach(r=>{
     if(statusFilter !== 'ALL' && r.status !== statusFilter) return;
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td data-label="姓名">${r.userName}</td>
-      <td data-label="日期">${r.date}</td>
-      <td data-label="時間">${r.time}</td>
-      <td data-label="項目">${r.補打卡}</td>
-      <td data-label="狀態"><span class="badge badge-${r.status}">${r.status}</span></td>
-    `;
+    tr.innerHTML = `<td data-label="姓名">${r.userName}</td><td data-label="日期">${r.date}</td><td data-label="時間">${r.time}</td><td data-label="項目">${r.補打卡}</td><td data-label="狀態"><span class="badge badge-${r.status}">${r.status}</span></td>`;
     if((userRole==='督導' && r.status==='未簽核') || (userRole==='總督導' && r.status==='簽核中')){
       tr.onclick = () => openModal(r);
     }
@@ -215,35 +164,23 @@ function openModal(r){
   window.currentLevel = (r.status==='簽核中' && userRole==='總督導') ? 2 : 1;
 }
 
-async function submit(ok, buttonElement) {
-  // 1. 儲存原始文字並將按鈕設為處理中
-  const originalText = buttonElement.innerText;
-  buttonElement.innerText = '簽核中...';
-  buttonElement.disabled = true; // 禁用按鈕防止重複送出
-
+async function submit(ok, btn) {
+  const container = btn.parentElement;
+  const originalText = btn.innerText;
+  btn.innerText = '簽核中...';
+  container.querySelectorAll('button').forEach(b => b.disabled = true);
   try {
-    const params = new URLSearchParams();
-    params.append('action', 'updateLeaveApproval');
-    params.append('keyId', currentKey);
-    params.append('level', currentLevel);
-    params.append('approver', approverName);
-    params.append('status', ok ? '核准' : '不准');
-
-    const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r => r.json());
-    
+    const params = new URLSearchParams({action:'updateLeaveApproval', keyId:currentKey, level:currentLevel, approver:approverName, status:ok?'核准':'不准'});
+    const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r=>r.json());
     alert(res.message || '簽核完成');
     closeModal();
     loadData();
-  } catch (error) {
-    console.error('簽核失敗:', error);
-    alert('簽核過程發生錯誤，請稍後再試');
-    // 發生錯誤時恢復按鈕讓使用者重試
-    buttonElement.innerText = originalText;
-    buttonElement.disabled = false;
+  } catch (e) {
+    alert('簽核失敗，請稍後再試');
+    btn.innerText = originalText;
+    container.querySelectorAll('button').forEach(b => b.disabled = false);
   }
 }
-
 </script>
 </body>
 </html>
-
