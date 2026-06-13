@@ -5,197 +5,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>補打卡簽核系統</title>
 <style>
-body { font-family: Arial, sans-serif; background: #f4f6f8; margin:0; padding:0; }
-#loginBox { display:flex; flex-direction:column; max-width:400px; margin:80px auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.2);}
-#loginBox h2 { margin:0 0 20px 0; font-size:1.8em; text-align:center; }
-#loginBox input { padding:12px; margin:8px 0; font-size:1.1em; border-radius:6px; border:1px solid #ccc; width:100%; box-sizing:border-box;}
-#loginBox button { padding:12px; margin-top:12px; font-size:1.1em; border:none; border-radius:6px; background:#1976d2; color:#fff; cursor:pointer; width:100%; transition:0.3s;}
-#loginBox button:hover { background:#1565c0; }
-#mainCard { display:none; margin:15px; }
-#mainCard h2 { font-size:1.6em; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
-#mainCard button.logoutBtn { background:#d32f2f; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:0.7em; transition:0.3s; }
-#mainCard button.logoutBtn:hover { background:#b71c1c; }
-.filters { display:flex; overflow-x:auto; margin:10px 0; -webkit-overflow-scrolling:touch; scroll-behavior:smooth; }
-.filters button { flex:0 0 auto; margin-right:10px; padding:10px 20px; border:none; border-radius:20px; font-size:1em; font-weight:bold; background:#e0e0e0; cursor:pointer; white-space:nowrap; transition:0.3s; }
-.filters button.active { background:#1976d2; color:#fff; transform:scale(1.05); box-shadow:0 4px 12px rgba(0,0,0,0.2); }
-table { width:100%; border-collapse:collapse; margin-top:10px; font-size:1.2em; }
-th, td { padding:8px; border-bottom:1px solid #ddd; text-align:center; }
-th { background:#1976d2; color:#fff; position:sticky; top:0; }
-tr:hover { background:#f1f1f1; cursor:pointer; }
-.badge { display:inline-block; padding:4px 12px; border-radius:12px; font-weight:bold; cursor:pointer; }
-.badge-未簽核 { background:#fff; color:#d32f2f; }
-.badge-簽核中 { background:#f57c00; color:#fff; }
-.badge-已簽核 { background:#388e3c; color:#fff; }
-#overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:999; }
-#modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border-radius:12px; width:90%; max-width:400px; font-size:1em; z-index:1000; box-shadow:0 4px 20px rgba(0,0,0,0.3);}
-#modal h3 { margin-top:0; font-size:1.4em; }
-#modal .closeBtn { position:absolute; top:10px; right:10px; background:#d32f2f; color:#fff; border:none; border-radius:50%; width:32px; height:32px; font-size:1.2em; cursor:pointer; line-height:32px; text-align:center; }
-#modal .actionBtns { display:flex; justify-content:space-between; margin-top:20px; }
-#modal button.approveBtn, #modal button.rejectBtn { flex:1; margin:0 5px; padding:10px 0; border:none; border-radius:8px; font-size:0.935em; cursor:pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; color:#fff; }
-#modal button.approveBtn { background:#388e3c; }
-#modal button.rejectBtn { background:#d32f2f; }
-#modal button.approveBtn:active, #modal button.rejectBtn:active { transform:scale(0.95); box-shadow:0 2px 6px rgba(0,0,0,0.2); }
-@media (max-width:600px){ table { font-size:1em; } th, td { padding:6px; } .filters button { font-size:0.9em; padding:8px 16px; }}
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f8; margin:0; padding:0; }
+  #loginBox { display:flex; flex-direction:column; max-width:400px; margin:80px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.1);}
+  #loginBox h2 { margin:0 0 20px 0; text-align:center; }
+  #loginBox input { padding:14px; margin:8px 0; font-size:1em; border-radius:8px; border:1px solid #ccc; width:100%; box-sizing:border-box;}
+  #loginBox button { padding:14px; margin-top:12px; font-size:1em; border:none; border-radius:8px; background:#1976d2; color:#fff; cursor:pointer; font-weight:bold; }
+  
+  #mainCard { display:none; padding:15px; max-width: 800px; margin: 0 auto; }
+  .header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; }
+  .closeBtn-round { width:40px; height:40px; border-radius:50%; border:none; background:#d32f2f; color:#fff; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  
+  .filters { display:flex; overflow-x:auto; gap:10px; margin-bottom:15px; padding-bottom:5px; }
+  .filters button { padding:8px 16px; border:none; border-radius:20px; font-weight:bold; background:#e0e0e0; cursor:pointer; white-space:nowrap; }
+  .filters button.active { background:#1976d2; color:#fff; }
+  
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; }
+  th { background:#1976d2; color:#fff; padding:12px; }
+  td { padding:12px; border-bottom:1px solid #eee; text-align:center; }
+  
+  .badge { padding:4px 10px; border-radius:12px; font-size:0.85em; font-weight:bold; }
+  .badge-未簽核 { background:#ffebee; color:#d32f2f; }
+  .badge-簽核中 { background:#fff3e0; color:#f57c00; }
+  .badge-已簽核 { background:#e8f5e9; color:#388e3c; }
+
+  #overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:999; }
+  #modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border-radius:16px; width:90%; max-width:400px; z-index:1000; box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+  .modal-item { margin:10px 0; }
+  .modal-label { color:#666; font-size:0.9em; }
+  .modal-val { font-weight:bold; font-size:1.1em; }
+  
+  @media (max-width:600px){
+    table, thead, tbody, th, td, tr { display:block; }
+    thead { display:none; }
+    tr { background:#fff; margin-bottom:12px; padding:15px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); }
+    td { display:flex; justify-content:space-between; padding:6px 0; border:none; }
+    td::before { content:attr(data-label); font-weight:bold; color:#555; }
+  }
 </style>
 </head>
 <body>
 
-<div class="card" id="loginBox">
-  <h2>補打卡簽核系統</h2>
-  <input id="loginCode" type="text" autocomplete="off" placeholder="請輸入代碼" style="font-family: 'text-security-disc'; -webkit-text-security: disc;">
+<div id="loginBox">
+  <h2>補打卡簽核</h2>
+  <input id="loginCode" type="text" placeholder="請輸入代碼">
   <button onclick="login()">登入</button>
 </div>
 
-<div class="card" id="mainCard">
-  <h2>
-    補打卡簽核系統
-    <button class="logoutBtn" onclick="logout()">登出</button>
-  </h2>
+<div id="mainCard">
+  <div class="header">
+    <h3>補打卡審核</h3>
+    <button class="closeBtn-round" onclick="logout()">×</button>
+  </div>
   <div class="filters">
     <button id="btnAll" onclick="setStatus('ALL')">全部</button>
     <button id="btnPending" onclick="setStatus('未簽核')">未簽核</button>
     <button id="btnProcessing" onclick="setStatus('簽核中')">簽核中</button>
     <button id="btnDone" onclick="setStatus('已簽核')">已簽核</button>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th>姓名</th>
-        <th>日期</th>
-        <th>時間</th>
-        <th>公司位置</th>
-        <th>打卡狀態</th>
-        <th>補打卡</th>
-        <th>補打原因</th>
-        <th>狀態</th>
-      </tr>
-    </thead>
+  <table id="dataTable">
+    <thead><tr><th>姓名</th><th>日期</th><th>時間</th><th>補打卡</th><th>狀態</th></tr></thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
 
 <div id="overlay"></div>
 <div id="modal">
-  <button class="closeBtn" onclick="closeModal()">×</button>
-  <h3>簽核</h3>
-  <div>姓名：<span id="modalName"></span></div>
-  <div>補打卡：<span id="modalType"></span></div>
-  <div>日期：<span id="modalStart"></span></div>
-  <div>時間：<span id="modalEnd"></span></div>
-  <div>補打原因：<span id="modalReason"></span></div>
-  <div class="actionBtns">
-    <button class="approveBtn" onclick="submit(true)">核准</button>
-    <button class="rejectBtn" onclick="submit(false)">不准</button>
+  <h3>簽核確認</h3>
+  <div class="modal-item"><div class="modal-label">姓名</div><div class="modal-val" id="modalName"></div></div>
+  <div class="modal-item"><div class="modal-label">補打卡</div><div class="modal-val" id="modalType"></div></div>
+  <div class="modal-item"><div class="modal-label">原因</div><div class="modal-val" id="modalReason"></div></div>
+  <div style="display:flex; gap:10px; margin-top:20px;">
+    <button style="flex:1; padding:12px; border:none; border-radius:8px; background:#388e3c; color:#fff;" onclick="submit(true)">核准</button>
+    <button style="flex:1; padding:12px; border:none; border-radius:8px; background:#d32f2f; color:#fff;" onclick="submit(false)">不准</button>
   </div>
 </div>
 
 <script>
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxxFjQj7wFbAcG55GXNTdIWZ0xrQtMfKXSvW0bE7ujgTGO41mhd3gwfImDKoi5rIDdh/exec';
-let loginCode='', userRole='', approverName='', statusFilter='未簽核';
-let currentKey=null, currentLevel=null;
-
-const loginBox = document.getElementById('loginBox');
-const mainCard = document.getElementById('mainCard');
-loginBox.style.display='block';
-mainCard.style.display='none';
+let loginCode='', userRole='', approverName='', statusFilter='未簽核', allData=[];
 
 async function login(){
   const code = document.getElementById('loginCode').value.trim();
-  if(!code) return alert('請輸入代碼');
+  if(!code) return;
   const res = await fetch(`${WEB_APP_URL}?action=checkLogin&code=${code}`).then(r=>r.json());
   if(!res) return alert('代碼無效');
-  loginCode = code;
-  userRole = res.role;
-  approverName = res.approverName;
-  loginBox.style.display='none';
-  mainCard.style.display='block';
-  setStatus('未簽核');
+  loginCode = code; userRole = res.role; approverName = res.approverName;
+  document.getElementById('loginBox').style.display='none';
+  document.getElementById('mainCard').style.display='block';
+  loadData();
 }
 
 function logout(){
-  // 清空登入資訊（可留或不留，反正會離開頁面）
-  loginCode = '';
-  userRole = '';
-  approverName = '';
-  statusFilter = '未簽核';
-
-  // 直接導向指定網頁（不回登入頁）
-  window.location.replace(
-    'https://script.google.com/macros/s/AKfycbxBaH8FGsqhonffJgszR2SYFUz0XpZZVzDQeEdHr_xVMQpj3NvAP1rT4ar3T5kMpmlpIA/exec'
-  );
-}
-
-function setStatus(s){
-  statusFilter = s;
-  document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
-  if(s==='ALL') btnAll.classList.add('active');
-  if(s==='未簽核') btnPending.classList.add('active');
-  if(s==='簽核中') btnProcessing.classList.add('active');
-  if(s==='已簽核') btnDone.classList.add('active');
-  loadData();
+  window.location.replace('https://script.google.com/macros/s/AKfycbxBaH8FGsqhonffJgszR2SYFUz0XpZZVzDQeEdHr_xVMQpj3NvAP1rT4ar3T5kMpmlpIA/exec');
 }
 
 async function loadData(){
   const res = await fetch(`${WEB_APP_URL}?action=getLeaveData&code=${loginCode}`).then(r=>r.json());
-  btnAll.textContent=`全部 (${res.count.ALL})`;
-  btnPending.textContent=`未簽核 (${res.count['未簽核']})`;
-  btnProcessing.textContent=`簽核中 (${res.count['簽核中']})`;
-  btnDone.textContent=`已簽核 (${res.count['已簽核']})`;
-  loadListOnly(res.list);
+  allData = res.list;
+  updateButtons(res.count);
+  renderTable();
 }
 
-function loadListOnly(list){
-  const tbody = document.getElementById('tbody'); 
-  tbody.innerHTML='';
-  list.forEach(r=>{
-    if(statusFilter!=='ALL' && r.status!==statusFilter) return;
+function updateButtons(c){
+  document.getElementById('btnAll').textContent = `全部 (${c.ALL})`;
+  document.getElementById('btnPending').textContent = `未簽核 (${c['未簽核']})`;
+  document.getElementById('btnProcessing').textContent = `簽核中 (${c['簽核中']})`;
+  document.getElementById('btnDone').textContent = `已簽核 (${c['已簽核']})`;
+}
+
+function setStatus(s){
+  statusFilter = s;
+  document.querySelectorAll('.filters button').forEach(b=>b.classList.toggle('active', b.id === 'btn'+s.replace('ALL','All')));
+  renderTable();
+}
+
+function renderTable(){
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  allData.forEach(r=>{
+    if(statusFilter !== 'ALL' && r.status !== statusFilter) return;
     const tr = document.createElement('tr');
-    const badge = `<span class="badge ${r.colorClass}">${r.status}</span>`;
-    tr.innerHTML=`
-      <td>${r.userName}</td>
-      <td>${r.date}</td>
-      <td>${r.time}</td>
-      <td>${r.company}</td>
-      <td>${r.punchStatus}</td>
-      <td>${r.補打卡||''}</td>
-      <td>${r.reason||''}</td>
-      <td>${badge}</td>
+    tr.innerHTML = `
+      <td data-label="姓名">${r.userName}</td>
+      <td data-label="日期">${r.date}</td>
+      <td data-label="時間">${r.time}</td>
+      <td data-label="項目">${r.補打卡}</td>
+      <td data-label="狀態"><span class="badge badge-${r.status}">${r.status}</span></td>
     `;
     if((userRole==='督導' && r.status==='未簽核') || (userRole==='總督導' && r.status==='簽核中')){
-      tr.style.cursor='pointer';
-      tr.onclick=()=>openModal(r);
+      tr.onclick = () => openModal(r);
     }
     tbody.appendChild(tr);
   });
 }
 
 function openModal(r){
-  currentKey=r.keyId;
-  currentLevel=(r.status==='簽核中' && userRole==='總督導')?2:1;
-  document.getElementById('modalName').textContent=r.userName;
-  document.getElementById('modalType').textContent=r.補打卡;
-  document.getElementById('modalStart').textContent=r.date;
-  document.getElementById('modalEnd').textContent=r.time;
-  document.getElementById('modalReason').textContent=r.reason||'';
-  document.getElementById('overlay').style.display='block';
-  document.getElementById('modal').style.display='block';
-}
-
-function closeModal(){
-  document.getElementById('overlay').style.display='none';
-  document.getElementById('modal').style.display='none';
+  document.getElementById('modalName').textContent = r.userName;
+  document.getElementById('modalType').textContent = r.補打卡;
+  document.getElementById('modalReason').textContent = r.reason || '無';
+  document.getElementById('overlay').style.display = document.getElementById('modal').style.display = 'block';
+  window.currentKey = r.keyId;
+  window.currentLevel = (r.status==='簽核中' && userRole==='總督導') ? 2 : 1;
 }
 
 async function submit(ok){
-  const params = new URLSearchParams();
-  params.append('action','updateLeaveApproval');
-  params.append('keyId',currentKey);
-  params.append('level',currentLevel);
-  params.append('approver',approverName);
-  params.append('status',ok?'核准':'不准');
-  const res = await fetch(`${WEB_APP_URL}?${params.toString()}`).then(r=>r.json());
-  alert(res.message || '簽核完成');
-  closeModal(); 
+  const params = new URLSearchParams({action:'updateLeaveApproval', keyId:window.currentKey, level:window.currentLevel, approver:approverName, status:ok?'核准':'不准'});
+  await fetch(`${WEB_APP_URL}?${params.toString()}`);
+  document.getElementById('overlay').style.display = document.getElementById('modal').style.display = 'none';
   loadData();
 }
 </script>
