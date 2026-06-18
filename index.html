@@ -118,6 +118,9 @@
     <h3>補打卡審核</h3>
     <button class="closeBtn-round" onclick="logout()">×</button>
   </div>
+  <input id="nameSearch" type="text" placeholder="搜尋姓名..." 
+style="width:100%;padding:10px;margin-bottom:10px;border-radius:8px;border:1px solid #ccc;">
+  
   <div class="filters">
     <button id="btnAll" onclick="setStatus('ALL')">全部</button>
     <button id="btnPending" onclick="setStatus('未簽核')">未簽核</button>
@@ -146,7 +149,7 @@
 <script>
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwh3rIk35jCKhxxjO2wFAZntz1WerKmUdA8lkc5UGyhbZsRLXy7WuoAOJuD3_TNlnn1/exec';
 let loginCode='', userRole='', approverName='', statusFilter='未簽核', allData=[];
-
+let nameKeyword = '';
 async function login(){
   const btn = document.querySelector('#loginBox button');
   const code = document.getElementById('loginCode').value.trim();
@@ -208,13 +211,32 @@ function setStatus(s){
 function renderTable(){
   const tbody = document.getElementById('tbody');
   tbody.innerHTML = '';
-  allData.forEach(r=>{
-    if(statusFilter !== 'ALL' && r.status !== statusFilter) return;
+
+  const filtered = allData
+    .filter(r => {
+      const matchStatus = statusFilter === 'ALL' || r.status === statusFilter;
+      const matchName = !nameKeyword || r.userName.includes(nameKeyword);
+      return matchStatus && matchName;
+    });
+
+  filtered.forEach(r=>{
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td data-label="姓名">${r.userName}</td><td data-label="日期">${r.date}</td><td data-label="時間">${r.time}</td><td data-label="項目">${r.補打卡}</td><td data-label="狀態"><span class="badge badge-${r.status}">${r.status}</span></td>`;
-    if((userRole==='督導' && r.status==='未簽核') || (userRole==='總督導' && r.status==='簽核中')){
+
+    tr.innerHTML = `
+      <td data-label="姓名">${r.userName}</td>
+      <td data-label="日期">${r.date}</td>
+      <td data-label="時間">${r.time}</td>
+      <td data-label="項目">${r.補打卡}</td>
+      <td data-label="狀態">
+        <span class="badge badge-${r.status}">${r.status}</span>
+      </td>
+    `;
+
+    if((userRole==='督導' && r.status==='未簽核') ||
+       (userRole==='總督導' && r.status==='簽核中')){
       tr.onclick = () => openModal(r);
     }
+
     tbody.appendChild(tr);
   });
 }
@@ -261,6 +283,10 @@ async function submit(ok, btn) {
     container.querySelectorAll('button').forEach(b => b.disabled = false);
   }
 }
+  document.getElementById('nameSearch').addEventListener('input', e => {
+  nameKeyword = e.target.value.trim();
+  renderTable();
+});
 </script>
 </body>
 </html>
