@@ -217,6 +217,12 @@ function renderTable(){
       const matchStatus = statusFilter === 'ALL' || r.status === statusFilter;
       const matchName = !nameKeyword || r.userName.includes(nameKeyword);
       return matchStatus && matchName;
+    })
+    .sort((a, b) => {
+      // 新 → 舊
+      const dateA = new Date(`${a.date} ${a.time || ''}`);
+      const dateB = new Date(`${b.date} ${b.time || ''}`);
+      return dateB - dateA;
     });
 
   filtered.forEach(r=>{
